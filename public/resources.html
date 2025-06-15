@@ -1,0 +1,72 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Resources - Your Health Hub</title>
+     <!-- CKEditor script can remain if other pages use it, but it won't be initialized for #editor on this page -->
+     <!-- <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script> -->
+     <link rel="stylesheet" href="main_style.css">
+ </head>
+ <body>
+     <div id="navbar-placeholder"></div>
+ 
+     <main>
+         <!-- The page-title-section has been removed -->
+ 
+         <!-- The content inside this #editor div will now be static HTML for resources.html -->
+         <div id="editor"> 
+             <section class="content-section" style="padding-top: 20px;"> <!-- Added some top padding to content-section -->
+                 <p>Explore our collection of valuable resources designed to support your health and wellness journey. We offer a variety of materials including informative videos, insightful audio sessions, and helpful articles.</p>
+ 
+                 <div class="about-cards-container" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; text-align: left;">
+                     <div class="about-card-item card-blue"> <!-- Light grey -->
+                         <h3>Video Resources</h3>
+                         <p>Watch our latest videos on health tips, program introductions, and wellness guides.</p>
+                         <a href="all-video-resources.html" class="cta-button">View All Videos</a>
+                     </div>
+                     <div class="about-card-item card-green">
+                         <h3>Audio Resources</h3>
+                         <p>Listen to guided meditations, health talks, and inspiring audio content.</p>
+                         <a href="all-audio-resources.html" class="cta-button">View All Audios</a>
+                     </div>
+                     <div class="about-card-item card-yellow">
+                         <h3>Reading Materials</h3>
+                         <p>Browse articles, guides, and downloadable PDFs on various health topics.</p>
+                         <!-- Link to a future all-reading-materials.html or a relevant section -->
+                         <a href="#" class="cta-button">Explore Articles</a> 
+                     </div>
+                 </div>
+ 
+                 <h2 style="margin-top: 50px; text-align: center;">Featured Content</h2>
+                 <p style="text-align: center;">Here's a sneak peek of what you can find:</p>
+                 
+                 <div class="resource-grid" style="margin-top: 20px;">
+                      <div class="resource-item">
+                          <img src="images/placeholder-video.png" alt="Video Thumbnail">
+                          <h3>Understanding Your Body</h3>
+                          <p>A short description of a featured video.</p>
+                          <a href="#" class="cta-button">Watch Now</a>
+                      </div>
+                      <div class="resource-item">
+                         <!-- Placeholder for an audio or article item -->
+                         <h3>Guided Meditation</h3>
+                         <p>A quick link to a popular audio session.</p>
+                         <a href="#" class="cta-button">Listen Now</a>
+                     </div>
+                 </div>
+  
+             </section>
+         </div>
+         <!-- Save Content button removed as this page is now static -->
+     </main>
+ 
+     <footer>
+         <p>&copy; 2024 Your Name/Brand. All rights reserved.</p>
+     </footer>
+ 
+     <script src="load-navbar.js"></script>
+     <!-- CKEditor initialization script for #editor on this page has been removed -->
+ </body>
+ </html>
+ 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Your Health Hub</title>
+    <!-- CKEditor script is still needed if other pages use it, but not for initializing the main #editor on this page -->
+    <!-- <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script> -->
+    <link rel="stylesheet" href="main_style.css">
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+    
+    <main>
+        <!-- The content inside this #editor div will now be static HTML for index.html -->
+        <div id="editor">
+            <section class="page-title-section">
+                <h1>Welcome to Your Health Hub</h1>
+                <p style="font-size: 1.1em; margin-top: 10px;">Your journey to better health starts here. Explore our core offerings through the links below.</p>
+            </section>
+
+            <section class="content-section" style="padding-top: 0;"> 
+                <div class="about-cards-container" 
+                     style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); max-width: 800px; margin: 30px auto; gap: 30px; text-align: left;">
+                    
+                    <div class="about-card-item card-green">
+                        <h3>Explore Our Services</h3>
+                        <p>Discover personalized consultations, specialized programs, insightful courses, and resources to help you achieve your wellness goals.</p>
+                        <a href="services.html" class="cta-button">View All Services</a>
+                    </div>
+
+                    <div class="about-card-item card-blue"> <!-- This card-blue will be light grey based on your CSS -->
+                        <h3>Learn More About Us</h3>
+                        <p>Understand our mission, philosophy, and the dedicated team committed to guiding you on your path to optimal health.</p>
+                        <a href="about.html" class="cta-button">Discover Our Story</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!-- Save Content button removed as per your request for index.html -->
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Your Name/Brand. All rights reserved.</p>
+    </footer>
+
+    <script src="load-navbar.js"></script>
+    <!-- The CKEditor initialization script for the main #editor div on this page has been removed. -->
+    <!-- If you want specific parts of the text within the static cards above to be editable later, -->
+    <!-- we would need a different, more targeted approach. -->
+</body>
+</html>

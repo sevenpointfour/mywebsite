@@ -1,0 +1,106 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Beyond 7.4 Program - Your Health Hub</title>
+     <!-- 1. Add CKEditor 5 script from CDN -->
+     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+     <link rel="stylesheet" href="main_style.css">
+ </head>
+ <body>
+     <div id="navbar-placeholder"></div>
+ 
+     <main>
+         <section class="page-title-section">
+             <h1>Beyond 7.4 Program</h1>
+         </section>
+ 
+         <!-- 2. Create a div that CKEditor will replace -->
+         <div id="editor">
+             <section class="content-section">
+                 <p>Detailed information about the Beyond 7.4 Program. Describe its focus on optimizing body pH, the science behind it, program structure, expected outcomes, and enrollment details.</p>
+                 <p>This advanced program focuses on optimizing your body's pH and overall well-being for long-term health benefits.</p>
+             </section>
+         </div>
+         <!-- 4. Add a Save button -->
+         <button id="saveButton" class="cta-button" style="margin-top: 20px; margin-left: 20px;">Save Content</button>
+     </main>
+ 
+     <footer>
+         <p>&copy; 2024 Your Name/Brand. All rights reserved.</p>
+     </footer>
+     <script src="load-navbar.js"></script>
+     <!-- 3. Initialize CKEditor and add saving/loading logic -->
+     <script>
+         // Derive pageNameForContent from the HTML filename
+         let pageNameForContent = window.location.pathname.split("/").pop() || "index.html";
+         if (pageNameForContent.endsWith('.html')) {
+             pageNameForContent = pageNameForContent.slice(0, -5);
+         }
+         // Special case for index.html, ensure pageNameForContent is "index"
+         if (pageNameForContent === "" || pageNameForContent === "index.html") {
+             pageNameForContent = "index";
+         }
+ 
+         let editorInstance; // To hold the CKEditor instance
+ 
+         // Function to load content into the editor
+         function loadEditorContent() {
+             fetch(`/api/page-content/${pageNameForContent}`)
+                 .then(response => response.json())
+                 .then(data => {
+                     if (editorInstance && data.content) {
+                         editorInstance.setData(data.content);
+                         console.log(`Content loaded into editor for ${pageNameForContent}.`);
+                     } else if (editorInstance) {
+                         console.log(`No saved content found for ${pageNameForContent}, or editor not ready for initial data. Using HTML content.`);
+                     }
+                 })
+                 .catch(error => console.error('Error fetching content:', error));
+         }
+ 
+         ClassicEditor
+             .create( document.querySelector( '#editor' ) )
+             .then( newEditor => {
+                 editorInstance = newEditor; // Store the editor instance
+                 loadEditorContent(); // Load content after editor is initialized
+                 console.log(`CKEditor initialized successfully for ${pageNameForContent}.`);
+             } )
+             .catch( error => {
+                 console.error( `Error initializing CKEditor for ${pageNameForContent}:`, error );
+             } );
+ 
+         // Add event listener for the Save button
+         document.getElementById('saveButton').addEventListener('click', () => {
+             console.log('Save button clicked.');
+             if (editorInstance) {
+                 console.log('Editor instance found.');
+                 const data = editorInstance.getData();
+                 console.log('Data from editor:', data);
+ 
+                 fetch(`/api/page-content/${pageNameForContent}`, {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                     },
+                     body: JSON.stringify({ content: data }),
+                 })
+                 .then(response => response.json()) 
+                 .then(result => {
+                     console.log('Save result:', result);
+                     alert(result.message || (result.error ? `Error: ${result.error}` : 'Save completed.'));
+                 })
+                 .catch(error => {
+                     console.error('Error saving content:', error);
+                     alert('Error saving content: ' + error.message);
+                 });
+             } else {
+                 console.log('Editor instance NOT found. CKEditor might not have initialized correctly.');
+                 alert('Editor is not ready. Please wait a moment and try again, or check the console for errors during CKEditor initialization.');
+             }
+         });
+     </script>
+ </body>
+ </html>
+ 

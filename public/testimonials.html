@@ -1,0 +1,51 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Testimonials - Your Health Hub</title>
+     <!-- CKEditor script can remain if other pages use it, but it won't be initialized for #editor on this page -->
+     <!-- <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script> -->
+     <link rel="stylesheet" href="main_style.css">
+ </head>
+ <body>
+     <div id="navbar-placeholder"></div>
+ 
+     <main>
+         <!-- The page-title-section has been removed -->
+ 
+         <!-- The content inside this #editor div will now be static HTML for testimonials.html -->
+         <div id="editor">
+             <section class="content-section" style="padding-top: 20px;"> <!-- Added some top padding to content-section -->
+                 <p>Read inspiring stories and feedback from individuals who have benefited from our services and programs. Their experiences highlight the positive impact of our approach to health and wellness.</p>
+ 
+                 <!-- Removed example testimonials from this page -->
+ 
+                 <div class="about-cards-container" 
+                      style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); max-width: 700px; margin: 30px auto; gap: 20px; text-align: left;">
+                     
+                     <div class="about-card-item card-green">
+                         <h3>Written Testimonials</h3>
+                         <p>Read detailed accounts from clients who have shared their success stories with us.</p>
+                         <a href="all-written-testimonials.html" class="cta-button">View Written Testimonials</a>
+                     </div>
+                     <div class="about-card-item card-blue"> <!-- Light grey -->
+                         <h3>Video Testimonials</h3>
+                         <p>Watch video messages from clients sharing their experiences and transformations.</p>
+                         <a href="all-video-testimonials.html" class="cta-button">View Video Testimonials</a>
+                     </div>
+                 </div>
+             </section>
+         </div>
+         <!-- Save Content button removed as this page is now static -->
+     </main>
+ 
+     <footer>
+         <p>&copy; 2024 Your Name/Brand. All rights reserved.</p>
+     </footer>
+ 
+     <script src="load-navbar.js"></script>
+     <!-- CKEditor initialization script for #editor on this page has been removed -->
+ </body>
+ </html>
+ 
