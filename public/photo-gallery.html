@@ -2,10 +2,10 @@
  <html lang="en">
  <head>
      <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Personalized Health Consultation - Your Health Hub</title>
      <!-- 1. Add CKEditor 5 script from CDN -->
      <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Photo Gallery - Your Health Hub</title>
      <link rel="stylesheet" href="main_style.css">
  </head>
  <body>
@@ -13,16 +13,26 @@
  
      <main>
          <section class="page-title-section">
-             <h1>Personalized Health Consultation</h1>
+             <h1>Photo Gallery</h1>
          </section>
  
          <!-- 2. Create a div that CKEditor will replace -->
          <div id="editor">
              <section class="content-section">
-                 <p>Detailed information about the Personalized Health Consultation service. Explain the process, benefits, what's included, and how to register or book an appointment.</p>
-                 <p>This page will describe the in-depth one-on-one consultations, the creation of a tailored plan, and access to the client management portal for ongoing support and tracking.</p>
-                
-               
+                 <p>Welcome to our photo gallery! Here you can find images from our events, facilities, and happy clients. The content and images on this page will be manageable from the backend.</p>
+                 <div class="gallery-grid">
+                     <!-- Placeholder Image Item 1 -->
+                     <div class="gallery-item">
+                         <img src="https://via.placeholder.com/400x300.png?text=Event+Photo+1" alt="Event Photo 1">
+                         <p>Caption for Event Photo 1.</p>
+                     </div>
+                     <!-- Placeholder Image Item 2 -->
+                     <div class="gallery-item">
+                         <img src="https://via.placeholder.com/400x300.png?text=Facility+Photo+1" alt="Facility Photo 1">
+                         <p>Caption for Facility Photo 1.</p>
+                     </div>
+                     <!-- Add more gallery items as needed, managed by admin -->
+                 </div>
              </section>
          </div>
          <!-- 4. Add a Save button -->
@@ -68,7 +78,8 @@
                          editorInstance.setData(data.content);
                          console.log(`Content loaded into editor for ${pageNameForContent}.`);
                      } else if (editorInstance) {
-                         console.log(`No saved content found for ${pageNameForContent}, or editor not ready for initial data. Using HTML content.`);
+                         // If no content from backend, editor will use the initial HTML within #editor
+                         console.log(`No saved content found for ${pageNameForContent}. Using HTML content.`);
                      }
                  })
                  .catch(error => console.error('Error fetching content:', error));
@@ -97,9 +108,9 @@
                  console.error( `Error initializing CKEditor for ${pageNameForContent}:`, error );
              } );
  
-         // Add event listener for the Save button only if admin
-         if (adminToken) {
-             saveButton.addEventListener('click', () => {
+          // Add event listener for the Save button only if admin
+          if (adminToken) {
+              saveButton.addEventListener('click', () => {
                  console.log('Save button clicked.');
                  if (editorInstance) {
                      console.log('Editor instance found.');

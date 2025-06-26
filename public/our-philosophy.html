@@ -45,7 +45,19 @@
          }
  
          let editorInstance; // To hold the CKEditor instance
+         const adminToken = localStorage.getItem('adminWebsiteToken'); // Use a specific key for this site's admin
+         const saveButton = document.getElementById('saveButton');
+         let editorConfig = {}; // CKEditor configuration object
  
+         if (adminToken) {
+             saveButton.style.display = 'block'; // Or 'inline-block' or '' based on original CSS
+             console.log('Admin token found. Save button enabled.');
+         } else {
+             saveButton.style.display = 'none';
+             editorConfig.isReadOnly = true; // Make CKEditor read-only for non-admins
+             console.log('No admin token. Save button hidden. Editor will be read-only.');
+         }
+
          // Function to load content into the editor
          function loadEditorContent() {
              fetch(`/api/page-content/${pageNameForContent}`)
@@ -62,55 +74,79 @@
          }
  
          ClassicEditor
-             .create( document.querySelector( '#editor' ) )
+             .create( document.querySelector( '#editor' ), editorConfig ) // Pass the config
              .then( newEditor => {
                  editorInstance = newEditor; // Store the editor instance
                  loadEditorContent(); // Load content after editor is initialized
-                 console.log(`CKEditor initialized successfully for ${pageNameForContent}.`);
+                 if (editorConfig.isReadOnly) {
+                    console.log(`CKEditor for ${pageNameForContent} configured as read-only.`);
+                    if (newEditor.ui && newEditor.ui.element) {
+                        newEditor.ui.element.classList.add('ck-editor-readonly-wrapper');
+                        console.log(`Applied .ck-editor-readonly-wrapper to ${pageNameForContent}`);
+                     }
+                 } else {
+                    console.log(`CKEditor initialized successfully for ${pageNameForContent}.`);
+                    // Ensure the read-only class is not present if in admin mode
+                    if (newEditor.ui && newEditor.ui.element) {
+                        newEditor.ui.element.classList.remove('ck-editor-readonly-wrapper');
+                     }
+                 }
              } )
              .catch( error => {
                  console.error( `Error initializing CKEditor for ${pageNameForContent}:`, error );
              } );
  
-         // Add event listener for the Save button
-         document.getElementById('saveButton').addEventListener('click', () => {
-             console.log('Save button clicked.');
-             if (editorInstance) {
-                 console.log('Editor instance found.');
-                 const data = editorInstance.getData();
-                 console.log('Data from editor:', data);
+         // Add event listener for the Save button only if admin
+         if (adminToken) {
+             saveButton.addEventListener('click', () => {
+                 console.log('Save button clicked.');
+                 if (editorInstance) {
+                     console.log('Editor instance found.');
+                     const data = editorInstance.getData();
+                     console.log('Data from editor:', data);
  
-                 fetch(`/api/page-content/${pageNameForContent}`, {
-                     method: 'POST',
-                     headers: {
-                         'Content-Type': 'application/json',
-                     },
-                     body: JSON.stringify({ content: data }),
-                 })
-                 .then(response => {
-                     console.log('Fetch response received:', response);
-                     if (!response.ok) {
-                         return response.json().catch(() => {
-                             throw new Error(`HTTP error! status: ${response.status} - ${response.statusText || 'Server error'}`);
-                         }).then(errData => {
-                             throw new Error(`HTTP error! status: ${response.status} - ${errData.error || response.statusText || 'Server error'}`);
-                         });
+                     // Re-fetch token in case it was set/cleared in another tab or by a login/logout action
+                     const currentAdminToken = localStorage.getItem('adminWebsiteToken');
+                     if (!currentAdminToken) {
+                         alert('Admin session expired or token not found. Please log in again.');
+                         saveButton.style.display = 'none'; // Hide button if token disappears
+                         if (editorInstance && !editorInstance.isReadOnly) editorInstance.isReadOnly = true; // Make editor read-only
+                         return;
                      }
-                     return response.json();
-                 })
-                 .then(result => {
-                     console.log('Save result:', result);
-                     alert(result.message || (result.error ? `Error: ${result.error}` : 'Save completed.'));
-                 })
-                 .catch(error => {
-                     console.error('Error saving content:', error);
-                     alert('Error saving content: ' + error.message);
-                 });
-             } else {
-                 console.log('Editor instance NOT found. CKEditor might not have initialized correctly.');
-                 alert('Editor is not ready. Please wait a moment and try again, or check the console for errors during CKEditor initialization.');
-             }
-         });
+ 
+                     fetch(`/api/page-content/${pageNameForContent}`, {
+                         method: 'POST',
+                         headers: {
+                             'Content-Type': 'application/json',
+                             'Authorization': `Bearer ${currentAdminToken}` // Send the token
+                         },
+                         body: JSON.stringify({ content: data }),
+                     })
+                     .then(response => {
+                         console.log('Fetch response received:', response);
+                         if (!response.ok) {
+                             return response.json().catch(() => {
+                                 throw new Error(`HTTP error! status: ${response.status} - ${response.statusText || 'Server error'}`);
+                             }).then(errData => {
+                                 throw new Error(`HTTP error! status: ${response.status} - ${errData.error || response.statusText || 'Server error'}`);
+                             });
+                         }
+                         return response.json();
+                     })
+                     .then(result => {
+                         console.log('Save result:', result);
+                         alert(result.message || (result.error ? `Error: ${result.error}` : 'Save completed.'));
+                     })
+                     .catch(error => {
+                         console.error('Error saving content:', error);
+                         alert('Error saving content: ' + error.message);
+                     });
+                 } else {
+                     console.log('Editor instance NOT found. CKEditor might not have initialized correctly.');
+                     alert('Editor is not ready. Please wait a moment and try again, or check the console for errors during CKEditor initialization.');
+                 }
+             });
+         }
      </script>
  </body>
  </html>
