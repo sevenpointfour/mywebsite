@@ -3,7 +3,7 @@
  const fs = require('fs').promises; // Node.js File System module with promises
  
  const app = express();
- const port = 3010; // You can choose any port that's not in use, e.g., 3000
+ const port = process.env.PORT || 3010; // You can choose any port that's not in use, e.g., 3000
  
  // Middleware to parse JSON bodies. This is important for POST/PUT requests.
  app.use(express.json());
