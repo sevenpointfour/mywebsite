@@ -1,159 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <!-- 1. Add CKEditor 5 script from CDN -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Testimonials - Your Health Hub</title>
-    <link rel="stylesheet" href="main_style.css">
-</head>
-<body>
-    <div id="navbar-placeholder"></div>
-
-    <main>
-        <section class="page-title-section">
-            <h1>Video Testimonials</h1>
-        </section>
-
-        <!-- 2. Create a div that CKEditor will replace -->
-        <div id="editor">
-            <section class="content-section">
-                <p>Watch what our clients have to say about their experience. The content on this page will be manageable from the backend.</p>
-                <div class="resource-grid"> <!-- Reusing resource-grid for video layout -->
-                    <!-- Placeholder Video Testimonial 1 -->
-                    <div class="resource-item video-item">
-                        <a href="YOUR_VIDEO_TESTIMONIAL_LINK_1" target="_blank">
-                            <img src="https://via.placeholder.com/300x169.png?text=Video+Testimonial+1" alt="Video Testimonial 1">
-                            <h3>Client Name 1</h3>
-                        </a>
-                        <p>A brief note about this video testimonial.</p>
-                    </div>
-                    <!-- Placeholder Video Testimonial 2 -->
-                    <div class="resource-item video-item">
-                        <a href="YOUR_VIDEO_TESTIMONIAL_LINK_2" target="_blank">
-                            <img src="https://via.placeholder.com/300x169.png?text=Video+Testimonial+2" alt="Video Testimonial 2">
-                            <h3>Client Name 2</h3>
-                        </a>
-                        <p>A brief note about this video testimonial.</p>
-                    </div>
-                    <!-- Add more video testimonials as needed, managed by admin -->
-                </div>
-            </section>
-        </div>
-        <!-- 4. Add a Save button -->
-        <button id="saveButton" class="cta-button" style="margin-top: 20px; margin-left: 20px;">Save Content</button>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Your Name/Brand. All rights reserved.</p>
-    </footer>
-    <script src="load-navbar.js"></script>
-    <!-- 3. Initialize CKEditor and add saving/loading logic -->
-    <script>
-        // Derive pageNameForContent from the HTML filename
-        let pageNameForContent = window.location.pathname.split("/").pop() || "index.html";
-        if (pageNameForContent.endsWith('.html')) {
-            pageNameForContent = pageNameForContent.slice(0, -5);
-        }
-        // Special case for index.html, ensure pageNameForContent is "index"
-        if (pageNameForContent === "" || pageNameForContent === "index.html") {
-            pageNameForContent = "index";
-        }
-
-        let editorInstance; // To hold the CKEditor instance
-        const adminToken = localStorage.getItem('adminWebsiteToken'); // Use a specific key for this site's admin
-        const saveButton = document.getElementById('saveButton');
-        let editorConfig = {}; // CKEditor configuration object
-
-        if (adminToken) {
-            saveButton.style.display = 'block'; // Or 'inline-block' or '' based on original CSS
-            console.log('Admin token found. Save button enabled.');
-        } else {
-            saveButton.style.display = 'none';
-            editorConfig.isReadOnly = true; // Make CKEditor read-only for non-admins
-            console.log('No admin token. Save button hidden. Editor will be read-only.');
-        }
-
-        // Function to load content into the editor
-        function loadEditorContent() {
-            fetch(`/api/page-content/${pageNameForContent}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (editorInstance && data.content) {
-                        editorInstance.setData(data.content);
-                        console.log(`Content loaded into editor for ${pageNameForContent}.`);
-                    } else if (editorInstance) {
-                        console.log(`No saved content found for ${pageNameForContent}, or editor not ready for initial data. Using HTML content.`);
-                    }
-                })
-                .catch(error => console.error('Error fetching content:', error));
-        }
-
-        ClassicEditor
-            .create( document.querySelector( '#editor' ), editorConfig ) // Pass the config
-            .then( newEditor => {
-                editorInstance = newEditor; // Store the editor instance
-                loadEditorContent(); // Load content after editor is initialized
-                if (editorConfig.isReadOnly) {
-                   console.log(`CKEditor for ${pageNameForContent} configured as read-only.`);
-                   if (newEditor.ui && newEditor.ui.element) {
-                       newEditor.ui.element.classList.add('ck-editor-readonly-wrapper');
-                       console.log(`Applied .ck-editor-readonly-wrapper to ${pageNameForContent}`);
-                    }
-                } else {
-                   console.log(`CKEditor initialized successfully for ${pageNameForContent}.`);
-                   // Ensure the read-only class is not present if in admin mode
-                   if (newEditor.ui && newEditor.ui.element) {
-                       newEditor.ui.element.classList.remove('ck-editor-readonly-wrapper');
-                    }
-                }
-            } )
-            .catch( error => {
-                console.error( `Error initializing CKEditor for ${pageNameForContent}:`, error );
-            } );
-
-        // Add event listener for the Save button only if admin
-        if (adminToken) {
-            saveButton.addEventListener('click', () => {
-                console.log('Save button clicked.');
-                if (editorInstance) {
-                    console.log('Editor instance found.');
-                    const data = editorInstance.getData();
-                    console.log('Data from editor:', data);
-
-                    // Re-fetch token in case it was set/cleared in another tab or by a login/logout action
-                    const currentAdminToken = localStorage.getItem('adminWebsiteToken');
-                    if (!currentAdminToken) {
-                        alert('Admin session expired or token not found. Please log in again.');
-                        saveButton.style.display = 'none'; // Hide button if token disappears
-                        if (editorInstance && !editorInstance.isReadOnly) editorInstance.isReadOnly = true; // Make editor read-only
-                        return;
-                    }
-
-                    fetch(`/api/page-content/${pageNameForContent}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${currentAdminToken}` // Send the token
-                        },
-                        body: JSON.stringify({ content: data }),
-                    })
-                    .then(response => response.json()) 
-                    .then(result => {
-                        console.log('Save result:', result);
-                        alert(result.message || (result.error ? `Error: ${result.error}` : 'Save completed.'));
-                    })
-                    .catch(error => {
-                        console.error('Error saving content:', error);
-                        alert('Error saving content: ' + error.message);
-                    });
-                } else {
-                    console.log('Editor instance NOT found. CKEditor might not have initialized correctly.');
-                    alert('Editor is not ready. Please wait a moment and try again, or check the console for errors during CKEditor initialization.');
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <!-- 1. Replace CKEditor with TinyMCE script -->
+     <script src="https://cdn.tiny.cloud/1/s7g5cgt18q6g9dw7ud0p9tksgllbcoyz3bb071o39s55c7ac/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Video Testimonials - Your Health Hub</title>
+     <link rel="stylesheet" href="main_style.css">
+ </head>
+ <body>
+     <div id="navbar-placeholder"></div>
+ 
+     <main>
+         <section class="page-title-section">
+             <h1>Video Testimonials</h1>
+         </section>
+ 
+         <!-- 2. Use a textarea for TinyMCE -->
+         <textarea id="editor" style="min-height: 300px;">
+             <section class="content-section">
+                 <p>Watch what our clients have to say about their experience. The content on this page will be manageable from the backend.</p>
+                 <div class="resource-grid"> <!-- Reusing resource-grid for video layout -->
+                     <!-- Placeholder Video Testimonial 1 -->
+                     <div class="resource-item video-item">
+                         <a href="YOUR_VIDEO_TESTIMONIAL_LINK_1" target="_blank">
+                             <img src="https://via.placeholder.com/300x169.png?text=Video+Testimonial+1" alt="Video Testimonial 1">
+                             <h3>Client Name 1</h3>
+                         </a>
+                         <p>A brief note about this video testimonial.</p>
+                     </div>
+                     <!-- Placeholder Video Testimonial 2 -->
+                     <div class="resource-item video-item">
+                         <a href="YOUR_VIDEO_TESTIMONIAL_LINK_2" target="_blank">
+                             <img src="https://via.placeholder.com/300x169.png?text=Video+Testimonial+2" alt="Video Testimonial 2">
+                             <h3>Client Name 2</h3>
+                         </a>
+                         <p>A brief note about this video testimonial.</p>
+                     </div>
+                     <!-- Add more video testimonials as needed, managed by admin -->
+                 </div>
+             </section>
+         </textarea>
+         <!-- 4. Add a Save button and status display -->
+         <button id="saveButton" class="cta-button" style="margin-top: 20px; margin-left: 20px;">Save Content</button>
+         <div id="status" style="margin-top: 1rem; font-style: italic; color: #555;"></div>
+     </main>
+ 
+     <footer>
+         <p>&copy; 2024 Your Name/Brand. All rights reserved.</p>
+     </footer>
+     <script src="load-navbar.js"></script>
+     <!-- 3. Initialize TinyMCE and add saving/loading logic -->
+     <script>
+         // Derive pageNameForContent from the HTML filename
+         let pageNameForContent = window.location.pathname.split("/").pop() || "index.html";
+         if (pageNameForContent.endsWith('.html')) {
+             pageNameForContent = pageNameForContent.slice(0, -5);
+         }
+         if (pageNameForContent === "" || pageNameForContent === "index.html") {
+             pageNameForContent = "index";
+         }
+ 
+         const adminToken = localStorage.getItem('adminWebsiteToken');
+         const saveButton = document.getElementById('saveButton');
+         const statusDiv = document.getElementById('status');
+         const isReadOnly = !adminToken;
+ 
+         if (isReadOnly) {
+             saveButton.style.display = 'none';
+         } else {
+             saveButton.style.display = 'block';
+         }
+ 
+         tinymce.init({
+             selector: 'textarea#editor',
+             readonly: isReadOnly,
+             plugins: 'code table lists image link media wordcount help',
+             toolbar: isReadOnly ? false : 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table | image link media | help',
+             menubar: !isReadOnly,
+             height: 500,
+             setup: function(editor) {
+                 editor.on('init', function() {
+                     loadContent();
+                 });
+             }
+         });
+ 
+         async function loadContent() {
+             statusDiv.textContent = `Loading content for '${pageNameForContent}'...`;
+             try {
+                const response = await fetch(`/api/page-content/${pageNameForContent}`);
+                 if (!response.ok) throw new Error(`Failed to load content. Status: ${response.status}`);
+                 const data = await response.json();
+                 if (data && data.content) {
+                     tinymce.get('editor').setContent(data.content);
+                 }
+                statusDiv.textContent = `Content for '${pageNameForContent}' loaded.`;
+             } catch (error) {
+                 console.error('Error loading content:', error);
+                 statusDiv.textContent = `Error: ${error.message}`;
+             }
+         }
+ 
+         if (!isReadOnly) {
+             saveButton.addEventListener('click', async () => {
+                 const content = tinymce.get('editor').getContent();
+                 const token = localStorage.getItem('adminWebsiteToken');
+                 if (!token) {
+                     alert('You must be logged in to save content.');
+                     statusDiv.textContent = 'Error: Not logged in.';
+                     return;
+                 }
+                statusDiv.textContent = `Saving content for '${pageNameForContent}'...`;
+                 try {
+                    const response = await fetch(`/api/page-content/${pageNameForContent}`, {
+                         method: 'POST',
+                         headers: {
+                             'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                         },
+                         body: JSON.stringify({ content: content })
+                     });
+                     const result = await response.json();
+                     if (response.ok) {
+                         statusDiv.textContent = result.message || 'Content saved successfully!';
+                         alert('Content saved successfully!');
+                     } else {
+                         throw new Error(result.error || 'An unknown error occurred.');
+                     }
+                 } catch (error) {
+                     console.error('Error saving content:', error);
+                     statusDiv.textContent = `Error saving content: ${error.message}`;
+                     alert(`Error saving content: ${error.message}`);
+                 }
+             });
+         }
+     </script>
+ </body>
+ </html>
+ 
