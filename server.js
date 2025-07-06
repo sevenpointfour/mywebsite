@@ -84,7 +84,12 @@ app.get('/api/page-content/:pageName', async (req, res) => {
 app.post('/api/page-content/:pageName', verifyAdmin, async (req, res) => {
     const { pageName } = req.params;
     const { content } = req.body;
-
+    // ensure header contains admin token
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ') || authHeader.substring(7) !== ADMIN_TOKEN) {
+        return res.status(403).json({ error: 'Forbidden: Invalid or missing admin token.' });
+    }
+    
     if (content === undefined) {
         return res.status(400).json({ error: 'Content is missing.' });
     }
