@@ -46,9 +46,7 @@ function initializeAdminEditor() {
                 const response = await fetch(`/api/page-content/${pageNameForContent}`);
                 if (!response.ok) throw new Error(`Failed to load content. Status: ${response.status}`);
                 const data = await response.json();
-                if (data && data.content) {
-                    contentDiv.innerHTML = data.content;
-                }
+                contentDiv.innerHTML = getContent(data);
                 contentDiv.style.display = 'block';
                 contentDiv.classList.add('readonly-content'); // Add a class for styling if needed
                 editorEl.parentNode.insertBefore(contentDiv, editorEl);
@@ -76,9 +74,7 @@ function initializeAdminEditor() {
             const response = await fetch(`/api/page-content/${pageNameForContent}`);
             if (!response.ok) throw new Error(`Failed to load content. Status: ${response.status}`);
             const data = await response.json();
-            if (data && data.content) {
-                tinymce.get('editor').setContent(data.content);
-            }
+            tinymce.get('editor').setContent(getContent(data));
             if (statusDiv) statusDiv.textContent = `Content for '${pageNameForContent}' loaded.`;
         } catch (error) {
             console.error('Error loading content:', error);
@@ -88,7 +84,7 @@ function initializeAdminEditor() {
 
     function addSaveListener() {
         if (saveButton) saveButton.addEventListener('click', async () => {
-            const content = tinymce.get('editor').getContent();
+            const content = tinymce.get('editor').getContent().split("\n");
             const token = localStorage.getItem('adminWebsiteToken');
             if (!token) {
                 alert('You must be logged in to save content.');
@@ -124,3 +120,15 @@ function initializeAdminEditor() {
 }
 
 document.addEventListener('DOMContentLoaded', initializeAdminEditor);
+
+function getContent(data) {
+    let content;
+    if (data && data.content) {
+        if (typeof data.content === 'string') {
+            content = data.content;
+        } else if (Array.isArray(data.content)) {
+            content = data.content.join('\n');
+        }
+    }
+    return content;
+}
