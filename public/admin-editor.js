@@ -8,6 +8,10 @@ function initializeAdminEditor() {
         pageNameForContent = "index";
     }
 
+    if (document.querySelector('.content-html')) {
+        document.querySelector('.content-html .page-title-section h1').textContent = pageNameForContent.replace(/-/g, ' ');
+        document.head.title = pageNameForContent.replace(/-/g, ' ');
+    }
     const adminToken = localStorage.getItem('adminWebsiteToken');
     const saveButton = document.getElementById('saveButton');
     const statusDiv = document.getElementById('status');

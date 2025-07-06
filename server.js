@@ -1,4 +1,4 @@
- const express = require('express');
+const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
 require('dotenv').config();
@@ -34,6 +34,32 @@ const verifyAdmin = (req, res, next) => {
     console.log(`SERVER: Admin verification failed for ${req.method} ${req.originalUrl}`);
     res.status(403).json({ error: 'Forbidden: Admin access required.' });
 };
+
+// interceptor for html files
+app.use((req, res, next) => {
+    const originalUrl = req.originalUrl;
+    if (originalUrl.endsWith('.html')) {
+        let name = path.basename(req.url);
+        const contentDir = path.join(__dirname, 'content');
+        const filePath = path.join(contentDir, name.replace('.html', '.json'));
+        // if filePath exists on disk serve content.html
+        fs.access(filePath)
+            .then(() => {
+                console.log('Serving content.html');
+                res.sendFile(path.join(__dirname, 'public', 'content.html'));
+            })
+            .catch(() => {
+                // If the file does not exist, continue to serve the original HTML file
+                console.log('serving original html file');
+                next();
+            });
+        return;
+    } else {
+        next();
+    }
+});
+
+
 
 // GET page content
 app.get('/api/page-content/:pageName', async (req, res) => {

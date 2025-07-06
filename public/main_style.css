@@ -296,3 +296,7 @@ footer {
 .readonly-content {
     color: black;
 }
+
+.page-title-section h1 {
+    text-transform: capitalize;
+}
