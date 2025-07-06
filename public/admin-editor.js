@@ -89,6 +89,19 @@ function initializeAdminEditor() {
 
     function addSaveListener() {
         if (saveButton) saveButton.addEventListener('click', async () => {
+            let newPage = window.location.pathname.endsWith('new-page.html');
+            if (newPage) {
+                pageNameForContent = prompt('Enter page name');
+                if (!pageNameForContent) {
+                    alert('Page name is required.');
+                    return;
+                }
+                pageNameForContent = pageNameForContent.replace(/\s+/g, '-').toLowerCase();
+                if (!/^[a-z0-9-]+$/.test(pageNameForContent)) {
+                    alert('Page name can only contain alphanumeric characters and hyphens.');
+                    return;
+                }
+            }
             const content = tinymce.get('editor').getContent().split("\n");
             const token = localStorage.getItem('adminWebsiteToken');
             if (!token) {
@@ -109,7 +122,24 @@ function initializeAdminEditor() {
                 const result = await response.json();
                 if (response.ok) {
                     if (statusDiv) statusDiv.textContent = result.message || 'Content saved successfully!';
-                    alert('Content saved successfully!');
+                    let moreLinks = await fetch('/api/page-content/nav-items').then(response => response.json());
+                    if (newPage) {
+                        moreLinks.items.push({
+                            name: pageNameForContent,
+                            text: pageNameForContent.replace(/-/g, ' ')
+                        });
+                        const response = await fetch(`/api/page-content/nav-items`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify(moreLinks)
+                        });
+                        window.location.href = `${pageNameForContent}.html`;
+                    } else {
+                        alert('Content saved successfully!');
+                    }
                 } else {
                     throw new Error(result.error || 'An unknown error occurred.');
                 }

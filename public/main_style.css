@@ -300,3 +300,7 @@ footer {
 .page-title-section h1 {
     text-transform: capitalize;
 }
+
+a.nav-item {
+    text-transform: capitalize;
+}

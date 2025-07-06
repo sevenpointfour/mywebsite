@@ -3,10 +3,20 @@
  <head>
      <meta charset="UTF-8">
      <!-- 1. Replace CKEditor with TinyMCE script -->
-     <script src="https://cdn.tiny.cloud/1/s7g5cgt18q6g9dw7ud0p9tksgllbcoyz3bb071o39s55c7ac/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Photo Gallery - Your Health Hub</title>
      <link rel="stylesheet" href="main_style.css">
+     <style>
+        .gallery-item {
+            padding: 12px;
+            border: 1px solid silver;
+            margin: 3px;
+            padding: 3px;
+        }
+        .gallery-item p {
+            text-align: center;
+        }
+     </style>
  </head>
  <body>
      <div id="navbar-placeholder"></div>
@@ -16,35 +26,24 @@
              <h1>Photo Gallery</h1>
          </section>
  
-         <!-- 2. Use a textarea for TinyMCE -->
-         <textarea id="editor" style="min-height: 300px;">
-             <section class="content-section">
-                 <p>Welcome to our photo gallery! Here you can find images from our events, facilities, and happy clients. The content and images on this page will be manageable from the backend.</p>
-                 <div class="gallery-grid">
-                     <!-- Placeholder Image Item 1 -->
-                     <div class="gallery-item">
-                         <img src="https://via.placeholder.com/400x300.png?text=Event+Photo+1" alt="Event Photo 1">
-                         <p>Caption for Event Photo 1.</p>
-                     </div>
-                     <!-- Placeholder Image Item 2 -->
-                     <div class="gallery-item">
-                         <img src="https://via.placeholder.com/400x300.png?text=Facility+Photo+1" alt="Facility Photo 1">
-                         <p>Caption for Facility Photo 1.</p>
-                     </div>
-                     <!-- Add more gallery items as needed, managed by admin -->
-                 </div>
-             </section>
-         </textarea>
-         <!-- 4. Add a Save button and status display -->
-         <button id="saveButton" class="cta-button" style="margin-top: 20px; margin-left: 20px;">Save Content</button>
-         <div id="status" style="margin-top: 1rem; font-style: italic; color: #555;"></div>
+        <section class="content-section">
+            <p>Welcome to our photo gallery! Here you can find images from our events, facilities, and happy clients. The content and images on this page will be manageable from the backend.</p>
+            <div class="gallery-grid" style="display: flex; flex-wrap: wrap; justify-content: center;">
+            </div>
+                <template id="gallery-item-template">
+                    <div class="gallery-item">
+                        <img src="" alt="">
+                        <p>Caption for Event Photo 1.</p>
+                    </div>
+                </template>
+        </section>
      </main>
  
      <footer>
          <p>&copy; 2024 Your Name/Brand. All rights reserved.</p>
      </footer>
      <script src="load-navbar.js"></script>
-     <script src="admin-editor.js"></script>
+     <script src="photo-gallery.js"></script>
  </body>
  </html>
  

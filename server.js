@@ -83,14 +83,18 @@ app.get('/api/page-content/:pageName', async (req, res) => {
 // Save page content (admin only)
 app.post('/api/page-content/:pageName', verifyAdmin, async (req, res) => {
     const { pageName } = req.params;
-    const { content } = req.body;
+    const { content, items } = req.body;
     // ensure header contains admin token
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ') || authHeader.substring(7) !== ADMIN_TOKEN) {
         return res.status(403).json({ error: 'Forbidden: Invalid or missing admin token.' });
     }
     
-    if (content === undefined) {
+    if (!pageName || pageName.trim() === '') {
+        return res.status(400).json({ error: 'PageName is missing.' });
+    }
+
+    if (content === undefined && items === undefined) {
         return res.status(400).json({ error: 'Content is missing.' });
     }
 
@@ -99,11 +103,35 @@ app.post('/api/page-content/:pageName', verifyAdmin, async (req, res) => {
 
     try {
         await fs.mkdir(contentDir, { recursive: true });
-        await fs.writeFile(filePath, JSON.stringify({ content }, null, 2));
+        await fs.writeFile(filePath, JSON.stringify({ content, items }, null, 2));
         res.json({ success: true, message: `Content for ${pageName} saved successfully.` });
     } catch (error) {
         console.error(`Error saving content for ${pageName}:`, error);
         res.status(500).json({ error: 'Failed to save content.' });
+    }
+});
+
+app.delete('/api/page-content/:pageName', verifyAdmin, async (req, res) => {
+    const { pageName } = req.params;
+    // ensure header contains admin token
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ') || authHeader.substring(7) !== ADMIN_TOKEN) {
+        return res.status(403).json({ error: 'Forbidden: Invalid or missing admin token.' });
+    }
+    
+    if (!pageName || pageName.trim() === '') {
+        return res.status(400).json({ error: 'PageName is missing.' });
+    }
+
+    const contentDir = path.join(__dirname, 'content');
+    const filePath = path.join(contentDir, `${pageName}.json`);
+
+    try {
+        await fs.unlink(filePath);
+        res.json({ success: true, message: `Content for ${pageName} deleted successfully.` });        res.json({ success: true, message: `Content for ${pageName} saved successfully.` });
+    } catch (error) {
+        console.error(`Error deleting content for ${pageName}:`, error);
+        res.status(500).json({ error: 'Failed to de;ete content.' });
     }
 });
 
@@ -130,6 +158,24 @@ app.get('/api/admin/verify', (req, res) => {
     }
     res.json({ isAdmin: false });
 });
+
+// handler to get list of images in the public/photos folder
+app.get('/api/images', async (req, res) => {
+    const photosDir = path.join(__dirname, 'public', 'photos');
+    try {
+        const files = await fs.readdir(photosDir);
+        const images = files.filter(file => {
+            const ext = path.extname(file).toLowerCase();
+            return ['.jpg', '.jpeg', '.png', '.gif'].includes(ext);
+        }).sort();
+        res.json({ images });
+    } catch (error) {
+        console.error('Error reading images directory:', error);
+        res.status(500).json({ error: 'Failed to retrieve images.' });
+    }
+});
+
+
 
 // Health check
 app.get('/ping', (req, res) => {
