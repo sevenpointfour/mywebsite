@@ -1,6 +1,6 @@
 /* General Body Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
@@ -293,15 +293,6 @@ footer {
     margin-top: 30px;
 }
 
-/* Styles to make CKEditor non-interactive when read-only */
-.ck-editor-readonly-wrapper .ck-editor__main .ck-content {
-    background-color: #f0f0f0 !important; /* Visually indicate it's disabled */
-    opacity: 0.7 !important;
-    /* pointer-events: none !important; -- REMOVED to allow link clicks and text selection */
-    /* user-select: none !important; -- REMOVED to allow text selection (optional, can be kept if desired) */
-    /* cursor: default !important; -- REMOVED to allow default link/text cursors */
-}
-.ck-editor-readonly-wrapper .ck-toolbar {
-    display: none !important; /* Hide toolbar forcefully */
-}
+.readonly-content {
+    color: black;
 }

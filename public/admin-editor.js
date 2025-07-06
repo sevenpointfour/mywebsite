@@ -43,6 +43,7 @@ function initializeAdminEditor() {
             if (editorEl) {
                 editorEl.style.display = 'none';
                 let contentDiv = document.createElement('div');
+                contentDiv.classList.add('readonly-content');
                 const response = await fetch(`/api/page-content/${pageNameForContent}`);
                 if (!response.ok) throw new Error(`Failed to load content. Status: ${response.status}`);
                 const data = await response.json();
