@@ -1,8 +1,7 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- 1. Replace CKEditor script with TinyMCE script (use your API key) -->
     <script src="https://cdn.tiny.cloud/1/s7g5cgt18q6g9dw7ud0p9tksgllbcoyz3bb071o39s55c7ac/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1 Year Training Course - Your Health Hub</title>
@@ -16,30 +15,29 @@
             <h1>1 Year Training Course</h1>
         </section>
 
-        <!-- 2. Replace div#editor with textarea#editor for TinyMCE -->
         <textarea id="editor" style="min-height: 300px;">
             <section class="content-section">
                 <p>Detailed information about the 1 Year Training Course. Explain the course structure, modules, learning outcomes, prerequisites, certification (if any), and application process.</p>
                 <p>This is an intensive year-long training program for those looking to deepen their understanding and practice of health principles.</p>
             </section>
         </textarea>
-        <!-- 4. Add a Save button -->
-        <button id="saveButton" class="cta-button" style="margin-top: 20px; margin-left: 20px;">Save Content</button>
+
+        <!-- Save button, hidden by default -->
+        <button id="saveButton" class="cta-button" style="margin-top: 20px; margin-left: 20px; display: none;">Save Content</button>
         <div id="status" style="margin-top: 1rem; font-style: italic; color: #555;"></div>
     </main>
 
     <footer>
         <p>&copy; 2024 Your Name/Brand. All rights reserved.</p>
     </footer>
+
     <script src="load-navbar.js"></script>
-    <!-- 3. Initialize TinyMCE and add saving/loading logic -->
+
     <script>
-        // Derive pageNameForContent from the HTML filename
         let pageNameForContent = window.location.pathname.split("/").pop() || "index.html";
         if (pageNameForContent.endsWith('.html')) {
             pageNameForContent = pageNameForContent.slice(0, -5);
         }
-        // Special case for index.html, ensure pageNameForContent is "index"
         if (pageNameForContent === "" || pageNameForContent === "index.html") {
             pageNameForContent = "index";
         }
@@ -47,53 +45,63 @@
         const adminToken = localStorage.getItem('adminWebsiteToken');
         const saveButton = document.getElementById('saveButton');
         const statusDiv = document.getElementById('status');
-        const isReadOnly = !adminToken;
 
-        if (isReadOnly) {
-            saveButton.style.display = 'none';
-        } else {
-            saveButton.style.display = 'block';
+        async function initializePage() {
+            let isActuallyAdmin = false;
+
+            if (adminToken) {
+                try {
+                    const response = await fetch('/api/admin/verify', {
+                        headers: { 'Authorization': `Bearer ${adminToken}` }
+                    });
+                    const data = await response.json();
+                    if (response.ok && data.isAdmin) {
+                        isActuallyAdmin = true;
+                    }
+                } catch (error) {
+                    console.error('Admin verification failed:', error);
+                }
+            }
+
+            if (isActuallyAdmin) {
+                saveButton.style.display = 'block';
+                addSaveListener();
+            } else {
+                saveButton.style.display = 'none';
+            }
+
+            tinymce.init({
+                selector: 'textarea#editor',
+                readonly: !isActuallyAdmin,
+                plugins: 'code table lists image link media wordcount help',
+                toolbar: isActuallyAdmin ? 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table | image link media | help' : false,
+                menubar: isActuallyAdmin,
+                height: 500,
+                setup: function(editor) {
+                    editor.on('init', loadContent);
+                }
+            });
         }
 
-        // Initialize TinyMCE
-        tinymce.init({
-            selector: 'textarea#editor',
-            readonly: isReadOnly,
-            plugins: 'code table lists image link media wordcount help',
-            toolbar: isReadOnly ? false : 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table | image link media | help',
-            menubar: !isReadOnly,
-            height: 500,
-            setup: function(editor) {
-                editor.on('init', function() {
-                    loadContent();
-                });
-            }
-        });
-
-        // Load content from server
         async function loadContent() {
             statusDiv.textContent = `Loading content for '${pageNameForContent}'...`;
             try {
                 const response = await fetch(`/api/page-content/${pageNameForContent}`);
-                if (!response.ok) throw new Error(`Failed to load content. Status: ${response.status}`);
                 const data = await response.json();
-                if (data && data.content) {
-                    tinymce.get('editor').setContent(data.content);
-                }
-                statusDiv.textContent = `Content for '${pageNameForContent}' loaded.`;
+                tinymce.get('editor')?.setContent(data.content || '');
+                statusDiv.textContent = `Content loaded.`;
             } catch (error) {
                 console.error('Error loading content:', error);
                 statusDiv.textContent = `Error: ${error.message}`;
             }
         }
 
-        // Save content to server (only if admin)
-        if (!isReadOnly) {
+        function addSaveListener() {
             saveButton.addEventListener('click', async () => {
                 const content = tinymce.get('editor').getContent();
                 const token = localStorage.getItem('adminWebsiteToken');
                 if (!token) {
-                    alert('You must be logged in to save content.');
+                    alert('You must be logged in as admin to save content.');
                     statusDiv.textContent = 'Error: Not logged in.';
                     return;
                 }
@@ -105,7 +113,7 @@
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`
                         },
-                        body: JSON.stringify({ content: content })
+                        body: JSON.stringify({ content })
                     });
                     const result = await response.json();
                     if (response.ok) {
@@ -121,6 +129,8 @@
                 }
             });
         }
+
+        document.addEventListener('DOMContentLoaded', initializePage);
     </script>
 </body>
 </html>
