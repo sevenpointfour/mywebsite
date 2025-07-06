@@ -1,0 +1,15 @@
+{
+  "content": [
+    "<p>Read articles of relevance to Health and Nutrition</p>",
+    "<ul>",
+    "<li>",
+    "<p><a href=\"YOUR_AUDIO_LINK_1\">Article 1</a></p>",
+    "<p>A short description of Article 1.</p>",
+    "</li>",
+    "<li>",
+    "<p><a href=\"YOUR_AUDIO_LINK_2\">Article 2</a></p>",
+    "<p>A short description of Article 2.</p>",
+    "</li>",
+    "</ul>"
+  ]
+}
