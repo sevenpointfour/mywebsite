@@ -4,7 +4,7 @@ const fs = require('fs').promises;
 require('dotenv').config();
 
 const app = express();
-const port = 3010;
+const port = process.env.PORT || 3010;
 
 // Middleware to parse JSON
 app.use(express.json());
