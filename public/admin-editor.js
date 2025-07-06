@@ -130,5 +130,5 @@ function getContent(data) {
             content = data.content.join('\n');
         }
     }
-    return content;
+    return content || '';
 }
