@@ -1,6 +1,7 @@
  const express = require('express');
  const path = require('path');
  const fs = require('fs').promises; // Node.js File System module with promises
+ require('dotenv').config(); // Load environment variables from .env file
  
  const app = express();
  const port = process.env.PORT || 3010; // You can choose any port that's not in use, e.g., 3000
@@ -8,12 +9,17 @@
  // Middleware to parse JSON bodies. This is important for POST/PUT requests.
  app.use(express.json());
  
- // Define a simple admin token (in a real app, use environment variables and more robust auth)
- const ADMIN_TOKEN = process.env.WEBSITE_ADMIN_TOKEN || "YOUR_VERY_SECRET_ADMIN_TOKEN_3010";
- // Define hardcoded admin credentials (in a real app, use a database and hashed passwords)
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "password123";
-
+ // Check for required environment variables on startup
+ if (!process.env.WEBSITE_ADMIN_TOKEN || !process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD) {
+   console.error("FATAL ERROR: Missing required environment variables. Please check your .env file or set them in your environment.");
+   process.exit(1); // Exit if configuration is missing
+ }
+ 
+ // Admin credentials and token are now loaded from environment variables.
+ const ADMIN_TOKEN = process.env.WEBSITE_ADMIN_TOKEN;
+ const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
+ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+ 
  
  // Serve static files from the "public" directory
  app.use(express.static(path.join(__dirname, 'public')));
@@ -76,9 +82,9 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "password123";
  });
  
  // API endpoint for admin login
-app.post('/api/admin/login', (req, res) => {
+ app.post('/api/admin/login', (req, res) => {
   const { username, password } = req.body;
-
+ 
   if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
     // Credentials are correct, send back the admin token
     console.log(`SERVER: Admin login successful for user: ${username}`);
@@ -88,9 +94,9 @@ app.post('/api/admin/login', (req, res) => {
     console.log(`SERVER: Admin login failed for user: ${username}`);
     res.status(401).json({ success: false, error: 'Invalid username or password.' });
   }
-});
-
-
+ });
+ 
+ 
  // Optional: A simple route to check if the server is running
  app.get('/ping', (req, res) => {
    res.send('pong');
