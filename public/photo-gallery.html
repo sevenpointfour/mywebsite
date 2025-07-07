@@ -16,6 +16,64 @@
         .gallery-item p {
             text-align: center;
         }
+        .carousel-container {
+            position: relative;
+            max-width: 800px;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .carousel-slide {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            flex-shrink: 0;
+            object-fit: contain;
+            max-height: calc(80vh - 400px);
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            margin-top: -22px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .dot {
+            cursor: pointer;
+            height: 15px;
+            width: 15px;
+            margin: 0 2px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+
+        .active, .dot:hover {
+            background-color: #717171;
+        }
      </style>
  </head>
  <body>
@@ -28,14 +86,16 @@
  
         <section class="content-section">
             <p>Welcome to our photo gallery! Here you can find images from our events, facilities, and happy clients. The content and images on this page will be manageable from the backend.</p>
-            <div class="gallery-grid" style="display: flex; flex-wrap: wrap; justify-content: center;">
+            <div class="carousel-container">
+                <div class="carousel-slide">
+                    <!-- Images will be dynamically inserted here -->
+                </div>
+                <a class="prev">&#10094;</a>
+                <a class="next">&#10095;</a>
             </div>
-                <template id="gallery-item-template">
-                    <div class="gallery-item">
-                        <img src="" alt="">
-                        <p>Caption for Event Photo 1.</p>
-                    </div>
-                </template>
+            <div class="dots-container" style="text-align:center">
+                <!-- Dots will be dynamically inserted here -->
+            </div>
         </section>
      </main>
  

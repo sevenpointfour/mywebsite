@@ -128,10 +128,10 @@ app.delete('/api/page-content/:pageName', verifyAdmin, async (req, res) => {
 
     try {
         await fs.unlink(filePath);
-        res.json({ success: true, message: `Content for ${pageName} deleted successfully.` });        res.json({ success: true, message: `Content for ${pageName} saved successfully.` });
+        res.json({ success: true, message: `Content for ${pageName} deleted successfully.` });
     } catch (error) {
         console.error(`Error deleting content for ${pageName}:`, error);
-        res.status(500).json({ error: 'Failed to de;ete content.' });
+        res.status(500).json({ error: 'Failed to delete content.' });
     }
 });
 
