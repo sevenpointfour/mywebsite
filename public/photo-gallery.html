@@ -33,7 +33,11 @@
             width: 100%;
             flex-shrink: 0;
             object-fit: contain;
+            min-height: 400px;
             max-height: calc(80vh - 400px);
+            background-color: silver;
+            padding: 12px;
+            box-sizing: border-box;
         }
 
         .prev, .next {
@@ -75,6 +79,97 @@
         .active, .dot:hover {
             background-color: #717171;
         }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: #eee;
+            height: 10px;
+            border-radius: 5px;
+        }
+
+        .progress-bar {
+            width: 0;
+            height: 100%;
+            background-color: #717171;
+            border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .carousel-item-wrapper {
+            position: relative;
+            flex-shrink: 0;
+            width: 100%;
+        }
+
+        .delete-btn {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,0,0,0.5);
+            color: white;
+            border: none;
+            font-size: 20px;
+            line-height: 30px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .admin-mode .delete-btn {
+            display: block; /* Visible in admin mode */
+        }
+
+        .delete-btn:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        #upload-container {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 2px dashed #fff;
+            margin: 12px;
+            z-index: 20;
+        }
+
+        .admin-mode #upload-container {
+            display: flex; /* Visible in admin mode */
+        }
+
+        #upload-container.dragover {
+            background: rgba(0,0,0,0.7);
+        }
+
+        .admin-controls {
+            display: none; /* Hidden by default */
+            margin-bottom: 1rem;
+        }
+
+        .admin-mode .admin-controls {
+            display: block; /* Visible in admin mode */
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
      </style>
  </head>
  <body>
@@ -101,9 +196,19 @@
                 </div>
                 <a class="prev">&#10094;</a>
                 <a class="next">&#10095;</a>
+                <div id="upload-container">
+                    <button id="close-upload-btn" class="close-btn">&times;</button>
+                    <p>Drag & Drop, Paste, or Select an image to upload</p>
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                    <button id="upload-button" class="cta-button">Select Image</button>
+                </div>
             </div>
-            <div class="dots-container" style="text-align:center">
-                <!-- Dots will be dynamically inserted here -->
+            <div class="admin-controls">
+                <button id="add-image-btn" class="cta-button">Add Image</button>
+                <button id="copy-image-url-btn" class="cta-button">Copy Image URL</button>
+            </div>
+            <div class="progress-bar-container" style="margin-top: 10px;">
+                <div class="progress-bar"></div>
             </div>
         </section>
      </main>

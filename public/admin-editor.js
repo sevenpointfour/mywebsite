@@ -64,6 +64,31 @@ function initializeAdminEditor() {
                 toolbar: isReadOnly ? false : 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table | image link media | help',
                 menubar: !isReadOnly,
                 height: 500,
+                images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.withCredentials = false;
+                    xhr.open('POST', '/api/admin/upload-image');
+                    const token = localStorage.getItem('adminWebsiteToken');
+                    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                    xhr.onload = () => {
+                        if (xhr.status < 200 || xhr.status >= 300) {
+                            reject('HTTP Error: ' + xhr.status);
+                            return;
+                        }
+                        const json = JSON.parse(xhr.responseText);
+                        if (!json || typeof json.location != 'string') {
+                            reject('Invalid JSON: ' + xhr.responseText);
+                            return;
+                        }
+                        resolve(json.location);
+                    };
+                    xhr.onerror = () => {
+                        reject('Image upload failed due to a network error. Please try again.');
+                    };
+                    const formData = new FormData();
+                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+                    xhr.send(formData);
+                }),
                 setup: function (editor) {
                     editor.on('init', function () {
                         loadContent();

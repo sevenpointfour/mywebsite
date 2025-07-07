@@ -1,10 +1,24 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
+const multer = require('multer');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3010;
+
+// Multer setup for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/photos/');
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
 
 // Middleware to parse JSON
 app.use(express.json());
@@ -45,12 +59,10 @@ app.use((req, res, next) => {
         // if filePath exists on disk serve content.html
         fs.access(filePath)
             .then(() => {
-                console.log('Serving content.html');
                 res.sendFile(path.join(__dirname, 'public', 'content.html'));
             })
             .catch(() => {
                 // If the file does not exist, continue to serve the original HTML file
-                console.log('serving original html file');
                 next();
             });
         return;
@@ -159,6 +171,14 @@ app.get('/api/admin/verify', (req, res) => {
     res.json({ isAdmin: false });
 });
 
+// Image upload endpoint (admin only)
+app.post('/api/admin/upload-image', verifyAdmin, upload.single('file'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send({ error: 'No file uploaded.' });
+    }
+    res.json({ location: `/photos/${req.file.filename}` });
+});
+
 // handler to get list of images in the public/photos folder
 app.get('/api/images', async (req, res) => {
     const photosDir = path.join(__dirname, 'public', 'photos');
@@ -172,6 +192,26 @@ app.get('/api/images', async (req, res) => {
     } catch (error) {
         console.error('Error reading images directory:', error);
         res.status(500).json({ error: 'Failed to retrieve images.' });
+    }
+});
+
+app.delete('/api/images/:imageName', verifyAdmin, async (req, res) => {
+    const { imageName } = req.params;
+    if (!imageName) {
+        return res.status(400).json({ error: 'Image name is required.' });
+    }
+
+    const imagePath = path.join(__dirname, 'public', 'photos', imageName);
+
+    try {
+        await fs.unlink(imagePath);
+        res.json({ success: true, message: `Image ${imageName} deleted successfully.` });
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            return res.status(404).json({ error: 'Image not found.' });
+        }
+        console.error(`Error deleting image ${imageName}:`, error);
+        res.status(500).json({ error: 'Failed to delete image.' });
     }
 });
 

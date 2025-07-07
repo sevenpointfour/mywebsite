@@ -1,35 +1,19 @@
 let slideIndex = 0;
 const slide = document.querySelector('.carousel-slide');
-const dotsContainer = document.querySelector('.dots-container');
+const progressBar = document.querySelector('.progress-bar');
 let slides;
-let dots;
+let autoSlideInterval;
 
-async function init() {
-    const response = await fetch('/api/images');
-    const data = await response.json();
-    const images = data.images;
-
-    images.forEach(imageName => {
-        const img = document.createElement('img');
-        img.src = `/photos/${imageName}`;
-        img.alt = imageName;
-        slide.appendChild(img);
-
-        const dot = document.createElement('span');
-        dot.classList.add('dot');
-        dot.addEventListener('click', () => {
-            slideIndex = Array.from(dots).indexOf(dot);
-            showSlides();
-        });
-        dotsContainer.appendChild(dot);
-    });
-
-    slides = document.querySelectorAll('.carousel-slide img');
-    dots = document.querySelectorAll('.dot');
-    showSlides();
+function isAdmin() {
+    return !!localStorage.getItem('adminWebsiteToken');
 }
 
 function showSlides() {
+    if (!slides || slides.length === 0) {
+        slide.style.transform = '';
+        progressBar.style.width = '0%';
+        return;
+    }
     if (slideIndex >= slides.length) {
         slideIndex = 0;
     }
@@ -39,18 +23,235 @@ function showSlides() {
 
     slide.style.transform = `translateX(${-slideIndex * 100}%)`;
 
-    dots.forEach(dot => dot.classList.remove('active'));
-    dots[slideIndex].classList.add('active');
+    const progress = ((slideIndex + 1) / slides.length) * 100;
+    progressBar.style.width = `${progress}%`;
+}
+
+function startInterval() {
+    clearInterval(autoSlideInterval);
+    autoSlideInterval = setInterval(() => {
+        slideIndex++;
+        showSlides();
+    }, 5000);
+}
+
+function resetInterval() {
+    if (!isAdmin()) {
+        startInterval();
+    }
+}
+
+async function deleteImage(imageName) {
+    if (!confirm(`Are you sure you want to delete ${imageName}?`)) {
+        return;
+    }
+
+    const token = localStorage.getItem('adminWebsiteToken');
+    try {
+        const response = await fetch(`/api/images/${imageName}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (response.ok) {
+            init(); // Re-initialize the gallery
+        } else {
+            alert('Failed to delete image.');
+        }
+    } catch (error) {
+        console.error('Error deleting image:', error);
+        alert('An error occurred while deleting the image.');
+    }
+}
+
+async function init() {
+    const adminMode = isAdmin();
+    if (adminMode) {
+        document.body.classList.add('admin-mode');
+    } else {
+        document.body.classList.remove('admin-mode');
+    }
+
+    const response = await fetch('/api/images');
+    const data = await response.json();
+    const images = data.images;
+
+    slide.innerHTML = ''; // Clear previous images
+
+    const imageFiles = adminMode ? images : images.filter(i => !i.startsWith('file-'));
+
+    if (imageFiles.length === 0) {
+        slide.innerHTML = '<p>No images in the gallery.</p>';
+        slides = [];
+        showSlides();
+        return;
+    }
+
+    imageFiles.forEach(imageName => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'carousel-item-wrapper';
+
+        const img = document.createElement('img');
+        img.src = `/photos/${imageName}`;
+        img.alt = imageName;
+        wrapper.appendChild(img);
+
+        if (adminMode) {
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.innerHTML = 'Delete';
+            deleteBtn.title = `Delete ${imageName}`;
+            deleteBtn.onclick = (e) => {
+                e.stopPropagation();
+                deleteImage(imageName);
+            };
+            wrapper.appendChild(deleteBtn);
+        }
+        slide.appendChild(wrapper);
+    });
+
+    slides = document.querySelectorAll('.carousel-item-wrapper');
+    showSlides();
+
+    if (!adminMode) {
+        startInterval();
+    } else {
+        deactivateUpload();
+        clearInterval(autoSlideInterval);
+    }
 }
 
 document.querySelector('.prev').addEventListener('click', () => {
     slideIndex--;
     showSlides();
+    resetInterval();
 });
 
 document.querySelector('.next').addEventListener('click', () => {
     slideIndex++;
     showSlides();
+    resetInterval();
 });
+
+// Upload functionality
+const uploadContainer = document.getElementById('upload-container');
+const fileInput = document.getElementById('file-input');
+const uploadButton = document.getElementById('upload-button');
+const addImageBtn = document.getElementById('add-image-btn');
+const closeUploadBtn = document.getElementById('close-upload-btn');
+const copyImageUrlBtn = document.getElementById('copy-image-url-btn');
+
+if (copyImageUrlBtn) {
+    copyImageUrlBtn.addEventListener('click', () => {
+        if (slides && slides.length > 0 && slides[slideIndex]) {
+            const currentImage = slides[slideIndex].querySelector('img');
+            if (currentImage) {
+                const imageUrl = new URL(currentImage.src, window.location.origin).href;
+                navigator.clipboard.writeText(imageUrl).then(() => {
+                    alert('Image URL copied to clipboard!');
+                }, (err) => {
+                    console.error('Failed to copy image URL: ', err);
+                    alert('Failed to copy URL.');
+                });
+            }
+        } else {
+            alert('No image to copy.');
+        }
+    });
+}
+
+function activateUpload() {
+    if (uploadContainer) {
+        uploadContainer.style.display = 'flex';
+    }
+}
+
+function deactivateUpload() {
+    if (uploadContainer) {
+        uploadContainer.style.display = 'none';
+    }
+}
+
+if (addImageBtn) {
+    addImageBtn.addEventListener('click', activateUpload);
+}
+
+if (closeUploadBtn) {
+    closeUploadBtn.addEventListener('click', deactivateUpload);
+}
+
+if (uploadContainer) {
+    uploadContainer.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadContainer.classList.add('dragover');
+    });
+
+    uploadContainer.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadContainer.classList.remove('dragover');
+    });
+
+    uploadContainer.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadContainer.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            uploadFile(files[0]);
+        }
+    });
+
+    uploadButton.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            uploadFile(fileInput.files[0]);
+        }
+    });
+
+    window.addEventListener('paste', (e) => {
+        if (uploadContainer.style.display !== 'flex') return;
+        const items = e.clipboardData.items;
+        for (const item of items) {
+            if (item.type.indexOf('image') !== -1) {
+                const blob = item.getAsFile();
+                uploadFile(blob);
+                break; 
+            }
+        }
+    });
+}
+
+async function uploadFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const token = localStorage.getItem('adminWebsiteToken');
+    try {
+        const response = await fetch('/api/admin/upload-image', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        if (response.ok) {
+            deactivateUpload();
+            init(); // Re-initialize the gallery
+        } else {
+            const errorData = await response.json();
+            alert(`Failed to upload image: ${errorData.error}`);
+        }
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        alert('An error occurred while uploading the image.');
+    }
+}
 
 init();
