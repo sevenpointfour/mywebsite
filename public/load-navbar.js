@@ -65,6 +65,17 @@ document.addEventListener("DOMContentLoaded", async function () {
                 adminLink.classList.add('nav-item');
                 adminLink.innerHTML = `<a class="nav-link" href="/new-page.html">New Page</a>`;
                 navbarPlaceholder.querySelector('.navbar-links').appendChild(adminLink);
+
+                // Create and add a new Logout button
+                const logoutListItem = document.createElement('li');
+                logoutListItem.innerHTML = `<a href="#">Logout</a>`;
+                logoutListItem.querySelector('a').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    localStorage.removeItem('adminWebsiteToken');
+                    // Redirect to the admin login page
+                    window.location.href = '/admin-login.html';
+                });
+                navbarPlaceholder.querySelector('.navbar-links').appendChild(logoutListItem);
             }
         }
 
