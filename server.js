@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
 const multer = require('multer');
+const archiver = require('archiver');
 require('dotenv').config();
 
 const app = express();
@@ -266,6 +267,46 @@ app.delete('/api/images/:imagePath(*)', verifyAdmin, async (req, res) => {
         }
         console.error(`Error deleting image ${imagePath}:`, error);
         res.status(500).json({ error: 'Failed to delete image.' });
+    }
+});
+
+// New endpoint to download content directory as a zip file
+app.get('/api/admin/download-content', verifyAdmin, async (req, res) => {
+    const contentDir = path.join(__dirname, 'content');
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const timestamp = `${year}${month}${day}_${hours}${minutes}${seconds}`;
+    const archiveName = `content_backup_${timestamp}.zip`;
+
+    res.writeHead(200, {
+        'Content-Type': 'application/zip',
+        'Content-Disposition': `attachment; filename="${archiveName}"`
+    });
+
+    const archive = archiver('zip', {
+        zlib: { level: 9 } // Sets the compression level.
+    });
+
+    archive.on('error', function(err) {
+        console.error('Archive error:', err);
+        res.status(500).send({ error: err.message });
+    });
+
+    archive.pipe(res);
+
+    try {
+        await archive.directory(contentDir, 'content'); // Append the content directory to the archive
+        await archive.directory(path.join(__dirname, 'public', 'audio'), 'public/audio');
+        await archive.directory(path.join(__dirname, 'public', 'photos'), 'public/photos');
+        await archive.finalize(); // Finalize the archive (ie we are done adding files but streams may still be flowing)
+    } catch (error) {
+        console.error('Error zipping content directory:', error);
+        res.status(500).send({ error: 'Failed to create content archive.' });
     }
 });
 

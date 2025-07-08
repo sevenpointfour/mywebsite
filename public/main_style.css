@@ -325,3 +325,26 @@ footer {
 a.nav-item {
     text-transform: capitalize;
 }
+
+/* Admin Button Styling */
+.admin-button-container {
+    display: flex; /* Arrange buttons in a row */
+    gap: 10px; /* Space between buttons */
+    margin-bottom: 15px; /* Space below the button container */
+    justify-content: center; /* Center the buttons */
+}
+
+.admin-button {
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    padding: 10px 15px; /* Padding inside the button */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 1em; /* Font size */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.admin-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}

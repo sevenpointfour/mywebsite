@@ -33,11 +33,62 @@ function initializeAdminEditor() {
         }
 
         if (saveButton) {
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('admin-button-container');
+            saveButton.parentNode.insertBefore(buttonContainer, saveButton);
+            buttonContainer.appendChild(saveButton);
+
             if (isReadOnly) {
                 saveButton.style.display = 'none';
             } else {
                 saveButton.style.display = 'block';
                 addSaveListener();
+
+                // Add download content button
+                const downloadButton = document.createElement('button');
+                downloadButton.id = 'downloadContentButton';
+                downloadButton.textContent = 'Download Content Backup';
+                downloadButton.classList.add('admin-button'); // Add a class for styling
+                buttonContainer.appendChild(downloadButton);
+
+                downloadButton.addEventListener('click', async () => {
+                    const token = localStorage.getItem('adminWebsiteToken');
+                    if (!token) {
+                        alert('You must be logged in to download content.');
+                        return;
+                    }
+                    try {
+                        const response = await fetch('/api/admin/download-content', {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        if (response.ok) {
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            const now = new Date();
+                            const year = now.getFullYear();
+                            const month = String(now.getMonth() + 1).padStart(2, '0');
+                            const day = String(now.getDate()).padStart(2, '0');
+                            const hours = String(now.getHours()).padStart(2, '0');
+                            const minutes = String(now.getMinutes()).padStart(2, '0');
+                            const seconds = String(now.getSeconds()).padStart(2, '0');
+                            const timestamp = `${year}${month}${day}_${hours}${minutes}${seconds}`;
+                            a.download = `content_backup_${timestamp}.zip`;
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+                            window.URL.revokeObjectURL(url);
+                            alert('Content backup downloaded successfully!');
+                        } else {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Failed to download content backup.');
+                        }
+                    } catch (error) {
+                        console.error('Error downloading content backup:', error);
+                        alert(`Error downloading content backup: ${error.message}`);
+                    }
+                });
             }
         }
 
