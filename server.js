@@ -7,10 +7,26 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3010;
 
+function getUploadPath(req) {
+    let uploadPath = 'public/photos/';
+    if (req.body.folder) {
+        // Basic sanitization to prevent directory traversal
+        const folderName = path.basename(req.body.folder);
+        uploadPath = path.join('public/photos/', folderName);
+    }
+    return uploadPath;
+}
 // Multer setup for file uploads
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/photos/');
+    destination: async function (req, file, cb) {
+        let uploadPath = getUploadPath(req);
+        try {
+            await fs.mkdir(uploadPath, { recursive: true });
+        } catch (error) {
+            console.error('Error creating upload directory:', error);
+            return cb(error);
+        }
+        cb(null, uploadPath);
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -101,7 +117,7 @@ app.post('/api/page-content/:pageName', verifyAdmin, async (req, res) => {
     if (!authHeader || !authHeader.startsWith('Bearer ') || authHeader.substring(7) !== ADMIN_TOKEN) {
         return res.status(403).json({ error: 'Forbidden: Invalid or missing admin token.' });
     }
-    
+
     if (!pageName || pageName.trim() === '') {
         return res.status(400).json({ error: 'PageName is missing.' });
     }
@@ -130,7 +146,7 @@ app.delete('/api/page-content/:pageName', verifyAdmin, async (req, res) => {
     if (!authHeader || !authHeader.startsWith('Bearer ') || authHeader.substring(7) !== ADMIN_TOKEN) {
         return res.status(403).json({ error: 'Forbidden: Invalid or missing admin token.' });
     }
-    
+
     if (!pageName || pageName.trim() === '') {
         return res.status(400).json({ error: 'PageName is missing.' });
     }
@@ -176,41 +192,79 @@ app.post('/api/admin/upload-image', verifyAdmin, upload.single('file'), (req, re
     if (!req.file) {
         return res.status(400).send({ error: 'No file uploaded.' });
     }
-    res.json({ location: `/photos/${req.file.filename}` });
+    const folder = req.body.folder && req.body.folder !== 'root' ? `${req.body.folder}/` : '';
+    res.json({ location: `/photos/${folder}${req.file.filename}` });
 });
 
-// handler to get list of images in the public/photos folder
+// Recursive function to get all image files in a directory and its subdirectories, grouped by folder
+async function walk(dir, baseDir) {
+    let files = await fs.readdir(dir, { withFileTypes: true });
+    let imagesByFolder = {};
+
+    for (let file of files) {
+        const fullPath = path.join(dir, file.name);
+        const relativePath = path.relative(baseDir, fullPath);
+
+        if (file.isDirectory()) {
+            const subfolderImages = await walk(fullPath, baseDir);
+            for (const folder in subfolderImages) {
+                if (imagesByFolder[folder]) {
+                    imagesByFolder[folder].push(...subfolderImages[folder]);
+                } else {
+                    imagesByFolder[folder] = subfolderImages[folder];
+                }
+            }
+        } else if (file.isFile() && ['.jpg', '.jpeg', '.png', '.gif'].includes(path.extname(file.name).toLowerCase())) {
+            const folderName = path.dirname(relativePath);
+            const displayFolderName = folderName === '.' ? 'root' : folderName.split(path.sep)[0]; // Get top-level folder name or 'root'
+
+            if (!imagesByFolder[displayFolderName]) {
+                imagesByFolder[displayFolderName] = [];
+            }
+            imagesByFolder[displayFolderName].push(relativePath);
+        }
+    }
+    return imagesByFolder;
+}
+
+// handler to get list of images in the public/photos folder, grouped by subfolder
 app.get('/api/images', async (req, res) => {
     const photosDir = path.join(__dirname, 'public', 'photos');
     try {
-        const files = await fs.readdir(photosDir);
-        const images = files.filter(file => {
-            const ext = path.extname(file).toLowerCase();
-            return ['.jpg', '.jpeg', '.png', '.gif'].includes(ext);
-        }).sort();
-        res.json({ images });
+        const imagesByFolder = await walk(photosDir, photosDir);
+        // Sort images within each folder and sort folder names
+        for (const folder in imagesByFolder) {
+            imagesByFolder[folder].sort();
+        }
+        const sortedFolders = Object.keys(imagesByFolder).sort();
+        const sortedImagesByFolder = {};
+        sortedFolders.forEach(folder => {
+            sortedImagesByFolder[folder] = imagesByFolder[folder];
+        });
+
+        res.json({ imagesByFolder: sortedImagesByFolder });
     } catch (error) {
         console.error('Error reading images directory:', error);
         res.status(500).json({ error: 'Failed to retrieve images.' });
     }
 });
 
-app.delete('/api/images/:imageName', verifyAdmin, async (req, res) => {
-    const { imageName } = req.params;
-    if (!imageName) {
-        return res.status(400).json({ error: 'Image name is required.' });
+app.delete('/api/images/:imagePath(*)', verifyAdmin, async (req, res) => {
+    const imagePath = req.params.imagePath;
+    if (!imagePath) {
+        return res.status(400).json({ error: 'Image path is required.' });
     }
 
-    const imagePath = path.join(__dirname, 'public', 'photos', imageName);
+    const fullImagePath = path.join(__dirname, 'public', 'photos', imagePath);
 
     try {
-        await fs.unlink(imagePath);
-        res.json({ success: true, message: `Image ${imageName} deleted successfully.` });
+        await fs.unlink(fullImagePath);
+        res.json({ success: true, message: `Image ${imagePath} deleted successfully.` });
     } catch (error) {
         if (error.code === 'ENOENT') {
             return res.status(404).json({ error: 'Image not found.' });
         }
-        console.error(`Error deleting image ${imageName}:`, error);
+        console.error(`Error deleting image ${imagePath}:`, error);
         res.status(500).json({ error: 'Failed to delete image.' });
     }
 });

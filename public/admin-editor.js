@@ -86,6 +86,7 @@ function initializeAdminEditor() {
                         reject('Image upload failed due to a network error. Please try again.');
                     };
                     const formData = new FormData();
+                    formData.append('folder', '_editor'); // Add the folder parameter
                     formData.append('file', blobInfo.blob(), blobInfo.filename());
                     xhr.send(formData);
                 }),

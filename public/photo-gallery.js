@@ -1,6 +1,9 @@
 let slideIndex = 0;
 const slide = document.querySelector('.carousel-slide');
 const progressBar = document.querySelector('.progress-bar');
+const folderTabsContainer = document.getElementById('folder-tabs');
+let allImagesByFolder = {};
+let currentFolder = 'root';
 let slides;
 let autoSlideInterval;
 
@@ -9,7 +12,8 @@ function isAdmin() {
 }
 
 function showSlides() {
-    if (!slides || slides.length === 0) {
+    const imagesInCurrentFolder = allImagesByFolder[currentFolder] || [];
+    if (!slides || slides.length === 0 || imagesInCurrentFolder.length === 0) {
         slide.style.transform = '';
         progressBar.style.width = '0%';
         return;
@@ -41,21 +45,21 @@ function resetInterval() {
     }
 }
 
-async function deleteImage(imageName) {
-    if (!confirm(`Are you sure you want to delete ${imageName}?`)) {
+async function deleteImage(imagePath) {
+    if (!confirm(`Are you sure you want to delete ${imagePath}?`)) {
         return;
     }
 
     const token = localStorage.getItem('adminWebsiteToken');
     try {
-        const response = await fetch(`/api/images/${imageName}`, {
+        const response = await fetch(`/api/images/${imagePath}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
         if (response.ok) {
-            init(); // Re-initialize the gallery
+            init(currentFolder); // Re-initialize the gallery, staying in the current folder
         } else {
             alert('Failed to delete image.');
         }
@@ -65,7 +69,78 @@ async function deleteImage(imageName) {
     }
 }
 
-async function init() {
+function renderImages() {
+    slide.innerHTML = ''; // Clear previous images
+    const adminMode = isAdmin();
+    const imagesToDisplay = allImagesByFolder[currentFolder] || [];
+
+    const imageFiles = adminMode ? imagesToDisplay : imagesToDisplay.filter(i => !i.startsWith('_editor/'));
+
+    if (imageFiles.length === 0) {
+        slide.innerHTML = '<p>No images in this folder.</p>';
+        slides = [];
+        showSlides();
+        return;
+    }
+
+    imageFiles.forEach(imagePath => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'carousel-item-wrapper';
+
+        const img = document.createElement('img');
+        img.src = `/photos/${imagePath}`;
+        img.alt = imagePath;
+        wrapper.appendChild(img);
+
+        if (adminMode) {
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.innerHTML = 'Delete';
+            deleteBtn.title = `Delete ${imagePath}`;
+            deleteBtn.onclick = (e) => {
+                e.stopPropagation();
+                deleteImage(imagePath);
+            };
+            wrapper.appendChild(deleteBtn);
+        }
+        slide.appendChild(wrapper);
+    });
+
+    slides = document.querySelectorAll('.carousel-item-wrapper');
+    slideIndex = 0; // Reset slide index when folder changes
+    showSlides();
+}
+
+function createFolderTabs() {
+    folderTabsContainer.innerHTML = '';
+    const adminMode = isAdmin();
+    let folders = Object.keys(allImagesByFolder);
+
+    if (!adminMode) {
+        folders = folders.filter(folder => !folder.startsWith('_'));
+    }
+
+    if (folders.length > 1) {
+        folders.forEach(folder => {
+            const button = document.createElement('button');
+            button.className = 'folder-tab';
+            if (folder === currentFolder) {
+                button.classList.add('active');
+            }
+            button.textContent = folder === 'root' ? 'Root' : folder;
+            button.onclick = () => {
+                currentFolder = folder;
+                document.querySelectorAll('.folder-tab').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                renderImages();
+                resetInterval();
+            };
+            folderTabsContainer.appendChild(button);
+        });
+    }
+}
+
+async function init(initialFolder = null) {
     const adminMode = isAdmin();
     if (adminMode) {
         document.body.classList.add('admin-mode');
@@ -75,44 +150,22 @@ async function init() {
 
     const response = await fetch('/api/images');
     const data = await response.json();
-    const images = data.images;
+    allImagesByFolder = data.imagesByFolder;
 
-    slide.innerHTML = ''; // Clear previous images
-
-    const imageFiles = adminMode ? images : images.filter(i => !i.startsWith('file-'));
-
-    if (imageFiles.length === 0) {
-        slide.innerHTML = '<p>No images in the gallery.</p>';
-        slides = [];
-        showSlides();
-        return;
+    if (initialFolder && allImagesByFolder[initialFolder]) {
+        currentFolder = initialFolder;
+    } else if (allImagesByFolder['Gallery']) {
+        currentFolder = 'Gallery';
+    } else if (allImagesByFolder['root']) {
+        currentFolder = 'root';
+    } else if (Object.keys(allImagesByFolder).length > 0) {
+        currentFolder = Object.keys(allImagesByFolder)[0];
+    } else {
+        currentFolder = 'root'; // Default if no folders exist
     }
 
-    imageFiles.forEach(imageName => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'carousel-item-wrapper';
-
-        const img = document.createElement('img');
-        img.src = `/photos/${imageName}`;
-        img.alt = imageName;
-        wrapper.appendChild(img);
-
-        if (adminMode) {
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'delete-btn';
-            deleteBtn.innerHTML = 'Delete';
-            deleteBtn.title = `Delete ${imageName}`;
-            deleteBtn.onclick = (e) => {
-                e.stopPropagation();
-                deleteImage(imageName);
-            };
-            wrapper.appendChild(deleteBtn);
-        }
-        slide.appendChild(wrapper);
-    });
-
-    slides = document.querySelectorAll('.carousel-item-wrapper');
-    showSlides();
+    createFolderTabs();
+    renderImages();
 
     if (!adminMode) {
         startInterval();
@@ -141,6 +194,7 @@ const uploadButton = document.getElementById('upload-button');
 const addImageBtn = document.getElementById('add-image-btn');
 const closeUploadBtn = document.getElementById('close-upload-btn');
 const copyImageUrlBtn = document.getElementById('copy-image-url-btn');
+const addFolderBtn = document.getElementById('add-folder-btn');
 
 if (copyImageUrlBtn) {
     copyImageUrlBtn.addEventListener('click', () => {
@@ -156,7 +210,26 @@ if (copyImageUrlBtn) {
                 });
             }
         } else {
-            alert('No image to copy.');
+            alert('No image to copy.' + slides.length);
+        }
+    });
+}
+
+if (addFolderBtn) {
+    addFolderBtn.addEventListener('click', () => {
+        const folderName = prompt("Enter new folder name:");
+        if (folderName) {
+            const sanitizedFolderName = folderName.replace(/[^a-zA-Z0-9-_]/g, ''); // Basic sanitization
+            if (sanitizedFolderName) {
+                if (!allImagesByFolder[sanitizedFolderName]) {
+                    allImagesByFolder[sanitizedFolderName] = [];
+                }
+                currentFolder = sanitizedFolderName;
+                createFolderTabs();
+                renderImages();
+            } else {
+                alert("Invalid folder name. Please use alphanumeric characters, hyphens, or underscores.");
+            }
         }
     });
 }
@@ -229,6 +302,7 @@ if (uploadContainer) {
 
 async function uploadFile(file) {
     const formData = new FormData();
+    formData.append('folder', currentFolder);
     formData.append('file', file);
 
     const token = localStorage.getItem('adminWebsiteToken');
@@ -243,7 +317,7 @@ async function uploadFile(file) {
 
         if (response.ok) {
             deactivateUpload();
-            init(); // Re-initialize the gallery
+            init(currentFolder); // Re-initialize the gallery, staying in the current folder
         } else {
             const errorData = await response.json();
             alert(`Failed to upload image: ${errorData.error}`);
