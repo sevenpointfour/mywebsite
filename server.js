@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
 const multer = require('multer');
+const bcrypt = require('bcrypt');
 const archiver = require('archiver');
 require('dotenv').config();
 
@@ -41,14 +42,14 @@ const upload = multer({ storage: storage });
 app.use(express.json());
 
 // Load required environment variables
-if (!process.env.WEBSITE_ADMIN_TOKEN || !process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD) {
+if (!process.env.WEBSITE_ADMIN_TOKEN || !process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD_HASH) {
     console.error("FATAL ERROR: Missing environment variables. Check your .env file.");
     process.exit(1);
 }
 
 const ADMIN_TOKEN = process.env.WEBSITE_ADMIN_TOKEN;
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
 
 // Serve static files from "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
@@ -165,15 +166,19 @@ app.delete('/api/page-content/:pageName', verifyAdmin, async (req, res) => {
 });
 
 // Admin login
-app.post('/api/admin/login', (req, res) => {
+app.post('/api/admin/login', async (req, res) => {
     const { username, password } = req.body;
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-        console.log(`SERVER: Admin login successful`);
-        res.json({ success: true, token: ADMIN_TOKEN });
-    } else {
-        console.log(`SERVER: Admin login failed`);
-        res.status(401).json({ success: false, error: 'Invalid credentials.' });
+    if (username === ADMIN_USERNAME && password) {
+        const match = await bcrypt.compare(password, ADMIN_PASSWORD_HASH);
+        if (match) {
+            console.log(`SERVER: Admin login successful for ${username}`);
+            return res.json({ success: true, token: ADMIN_TOKEN });
+        }
     }
+
+    // Generic error message for security
+    console.log(`SERVER: Admin login failed for username: ${username}`);
+    res.status(401).json({ success: false, error: 'Invalid credentials.' });
 });
 
 // Verify admin token
