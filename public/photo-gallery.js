@@ -1,3 +1,4 @@
+
 let slideIndex = 0;
 const slide = document.querySelector('.carousel-slide');
 const progressBar = document.querySelector('.progress-bar');
@@ -11,13 +12,27 @@ function isAdmin() {
     return !!localStorage.getItem('adminWebsiteToken');
 }
 
-function showSlides() {
+function showSlides(isAutoSlide = false) {
     const imagesInCurrentFolder = allImagesByFolder[currentFolder] || [];
     if (!slides || slides.length === 0 || imagesInCurrentFolder.length === 0) {
         slide.style.transform = '';
         progressBar.style.width = '0%';
         return;
     }
+
+    if (isAutoSlide) {
+        slideIndex++;
+        if (slideIndex >= slides.length) {
+            const folders = Object.keys(allImagesByFolder);
+            const currentFolderIndex = folders.indexOf(currentFolder);
+            const nextFolderIndex = (currentFolderIndex + 1) % folders.length;
+            currentFolder = folders[nextFolderIndex];
+            slideIndex = 0;
+            renderImages();
+            updateFolderTabs();
+        }
+    }
+
     if (slideIndex >= slides.length) {
         slideIndex = 0;
     }
@@ -34,8 +49,7 @@ function showSlides() {
 function startInterval() {
     clearInterval(autoSlideInterval);
     autoSlideInterval = setInterval(() => {
-        slideIndex++;
-        showSlides();
+        showSlides(true); // Pass true for auto-slide
     }, 5000);
 }
 
@@ -107,8 +121,17 @@ function renderImages() {
     });
 
     slides = document.querySelectorAll('.carousel-item-wrapper');
-    slideIndex = 0; // Reset slide index when folder changes
     showSlides();
+}
+
+function updateFolderTabs() {
+    document.querySelectorAll('.folder-tab').forEach(btn => {
+        if (btn.dataset.folder === currentFolder) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
 }
 
 function createFolderTabs() {
@@ -124,19 +147,18 @@ function createFolderTabs() {
         folders.forEach(folder => {
             const button = document.createElement('button');
             button.className = 'folder-tab';
-            if (folder === currentFolder) {
-                button.classList.add('active');
-            }
+            button.dataset.folder = folder;
             button.textContent = folder === 'root' ? 'Root' : folder;
             button.onclick = () => {
                 currentFolder = folder;
-                document.querySelectorAll('.folder-tab').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
+                slideIndex = 0;
+                updateFolderTabs();
                 renderImages();
                 resetInterval();
             };
             folderTabsContainer.appendChild(button);
         });
+        updateFolderTabs();
     }
 }
 
@@ -329,3 +351,13 @@ async function uploadFile(file) {
 }
 
 init();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const editorElement = document.getElementById('editor');
+    const saveButton = document.getElementById('saveButton');
+    const statusElement = document.getElementById('status');
+
+    if (editorElement) {
+        initializeEditor('photo-gallery', editorElement, saveButton, statusElement);
+    }
+});
