@@ -2,7 +2,8 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
 const multer = require('multer');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt'); // No longer needed for OTP login
+const nodemailer = require('nodemailer');
 const archiver = require('archiver');
 require('dotenv').config();
 
@@ -42,14 +43,36 @@ const upload = multer({ storage: storage });
 app.use(express.json());
 
 // Load required environment variables
-if (!process.env.WEBSITE_ADMIN_TOKEN || !process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD_HASH) {
+if (
+    !process.env.WEBSITE_ADMIN_TOKEN ||
+    !process.env.ADMIN_USERNAME ||
+    // !process.env.ADMIN_PASSWORD_HASH, // No longer needed for OTP login
+    !process.env.EMAIL_HOST ||
+    !process.env.EMAIL_PORT ||
+    !process.env.EMAIL_USER ||
+    !process.env.EMAIL_PASS
+) {
     console.error("FATAL ERROR: Missing environment variables. Check your .env file.");
     process.exit(1);
 }
 
 const ADMIN_TOKEN = process.env.WEBSITE_ADMIN_TOKEN;
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+// const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH; // No longer needed for OTP login
+
+// In-memory store for OTPs. For production, consider a more persistent store like Redis.
+const otpStore = {};
+
+// Nodemailer transporter setup
+const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: parseInt(process.env.EMAIL_PORT, 10),
+    secure: process.env.EMAIL_PORT === '465', // true for 465, false for other ports
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
 
 // Serve static files from "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
@@ -166,19 +189,51 @@ app.delete('/api/page-content/:pageName', verifyAdmin, async (req, res) => {
 });
 
 // Admin login
-app.post('/api/admin/login', async (req, res) => {
-    const { username, password } = req.body;
-    if (username === ADMIN_USERNAME && password) {
-        const match = await bcrypt.compare(password, ADMIN_PASSWORD_HASH);
-        if (match) {
-            console.log(`SERVER: Admin login successful for ${username}`);
-            return res.json({ success: true, token: ADMIN_TOKEN });
+app.post('/api/admin/login', async (req, res) => { // Changed to passwordless OTP login
+    const { username } = req.body;
+    if (username === ADMIN_USERNAME) {
+        try {
+            const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+            const expiry = Date.now() + 10 * 60 * 1000; // OTP expires in 10 minutes
+
+            // Store OTP and its expiry time
+            otpStore[username] = { otp, expiry };
+
+            // Send OTP email
+            await transporter.sendMail({
+                from: `"SevenPointFour Admin" <${process.env.EMAIL_USER}>`,
+                to: username,
+                subject: 'Your Login Code',
+                text: `Your one-time login code is: ${otp}. It will expire in 10 minutes.`,
+                html: `<p>Your one-time login code is: <b>${otp}</b>. It will expire in 10 minutes.</p>`,
+            });
+
+            console.log(`SERVER: OTP sent to ${username}`);
+            return res.json({ success: true, message: 'A one-time code has been sent to your email.' });
+        } catch (error) {
+            console.error('Error sending OTP:', error);
+            return res.status(500).json({ success: false, error: 'Failed to send OTP. Please try again later.' });
         }
     }
 
     // Generic error message for security
-    console.log(`SERVER: Admin login failed for username: ${username}`);
-    res.status(401).json({ success: false, error: 'Invalid credentials.' });
+    console.log(`SERVER: Invalid login attempt for username: ${username}`);
+    res.status(401).json({ success: false, error: 'Invalid username.' });
+});
+
+// New endpoint to verify OTP and complete login
+app.post('/api/admin/verify-otp', (req, res) => {
+    const { username, otp } = req.body;
+    const storedOtpData = otpStore[username];
+
+    if (storedOtpData && storedOtpData.otp === otp && Date.now() < storedOtpData.expiry) {
+        console.log(`SERVER: OTP verification successful for ${username}`);
+        delete otpStore[username]; // OTP is single-use, delete it
+        res.json({ success: true, token: ADMIN_TOKEN });
+    } else {
+        console.log(`SERVER: OTP verification failed for ${username}`);
+        res.status(401).json({ success: false, error: 'Invalid or expired code.' });
+    }
 });
 
 // Verify admin token

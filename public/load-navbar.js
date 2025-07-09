@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     event.preventDefault();
                     localStorage.removeItem('adminWebsiteToken');
                     // Redirect to the admin login page
-                    window.location.href = '/admin-login.html';
+                    window.location.href = '/admin.html';
                 });
                 navbarPlaceholder.querySelector('.navbar-links').appendChild(logoutListItem);
             }
