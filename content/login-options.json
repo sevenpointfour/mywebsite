@@ -4,10 +4,10 @@
     "<p>&nbsp;</p>",
     "<h3>New User Registration</h3>",
     "<p>Not yet a member? Register here to get started with our services or courses.</p>",
-    "<p><a href=\"http://localhost:3020/register.html\">Register Now</a></p>",
+    "<p><a href=\"http://localhost:3020/register.html\" class=\"cta-button cta-green\">Register Now</a></p>",
     "<p>If you have any trouble logging in or registering, please <a href=\"contact.html\">contact us</a> for assistance.&nbsp;</p>",
     "<h3>Client Portal Login</h3>",
     "<p>Access your personalized health plans, track your progress, and communicate with your consultant.</p>",
-    "<p><a href=\"http://localhost:3020/client-login.html\">Login to Client Portal</a></p>"
+    "<p><a href=\"http://localhost:3020/client-login.html\" class=\"cta-button cta-blue\">Login to Client Portal</a></p>"
   ]
 }

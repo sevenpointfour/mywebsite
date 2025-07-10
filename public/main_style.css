@@ -82,17 +82,34 @@ main {
 }
 
 .cta-button {
-    display: inline-block;
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-top: 15px;
-    transition: background-color 0.3s ease;
+  display: inline-block;
+  padding: 12px 24px;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 15px; /* Retained from original style */
 }
-.cta-button:hover {
-    background-color: #0056b3;
+
+.cta-button.cta-green {
+  background-color: #28a745; /* A nice green color */
+}
+
+.cta-button.cta-green:hover {
+  background-color: #218838; /* A darker green for hover */
+}
+
+.cta-button.cta-blue {
+  background-color: #007bff; /* A nice blue color */
+}
+
+.cta-button.cta-blue:hover {
+  background-color: #0056b3; /* A darker blue for hover */
 }
 
 .intro {
