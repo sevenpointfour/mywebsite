@@ -348,3 +348,8 @@ a.nav-item {
 .admin-button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
+
+/* Ensure all links have a pointer cursor to indicate they are clickable */
+a[href] {
+    cursor: pointer;
+}
