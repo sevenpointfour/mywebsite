@@ -45,13 +45,7 @@ app.use(express.json());
 // Load required environment variables
 if (
     !process.env.WEBSITE_ADMIN_TOKEN ||
-    !process.env.ADMIN_USERNAME ||
-    // !process.env.ADMIN_PASSWORD_HASH, // No longer needed for OTP login
-    !process.env.EMAIL_HOST ||
-    !process.env.EMAIL_PORT ||
-    !process.env.EMAIL_USER ||
-    !process.env.EMAIL_PASS
-) {
+    !process.env.ADMIN_USERNAME) {
     console.error("FATAL ERROR: Missing environment variables. Check your .env file.");
     process.exit(1);
 }
@@ -65,9 +59,7 @@ const otpStore = {};
 
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: parseInt(process.env.EMAIL_PORT, 10),
-    secure: process.env.EMAIL_PORT === '465', // true for 465, false for other ports
+    service: 'Gmail', // Or your email provider
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -199,15 +191,18 @@ app.post('/api/admin/login', async (req, res) => { // Changed to passwordless OT
             // Store OTP and its expiry time
             otpStore[username] = { otp, expiry };
 
-            // Send OTP email
-            await transporter.sendMail({
-                from: `"SevenPointFour Admin" <${process.env.EMAIL_USER}>`,
-                to: username,
-                subject: 'Your Login Code',
-                text: `Your one-time login code is: ${otp}. It will expire in 10 minutes.`,
-                html: `<p>Your one-time login code is: <b>${otp}</b>. It will expire in 10 minutes.</p>`,
-            });
-
+            if (process.env.EMAIL_USER) {
+                // Send OTP email
+                await transporter.sendMail({
+                    from: `"SevenPointFour Admin" <${process.env.EMAIL_USER}>`,
+                    to: username,
+                    subject: 'Your Login Code',
+                    text: `Your one-time login code is: ${otp}. It will expire in 10 minutes.`,
+                    html: `<p>Your one-time login code is: <b>${otp}</b>. It will expire in 10 minutes.</p>`,
+                });
+            } else {
+                console.log(`SERVER: Simulation OTP ${otp} sent to ${username}`);
+            }
             console.log(`SERVER: OTP sent to ${username}`);
             return res.json({ success: true, message: 'A one-time code has been sent to your email.' });
         } catch (error) {
@@ -352,7 +347,7 @@ app.get('/api/admin/download-content', verifyAdmin, async (req, res) => {
         zlib: { level: 9 } // Sets the compression level.
     });
 
-    archive.on('error', function(err) {
+    archive.on('error', function (err) {
         console.error('Archive error:', err);
         res.status(500).send({ error: err.message });
     });
