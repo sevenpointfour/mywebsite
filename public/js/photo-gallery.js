@@ -170,7 +170,7 @@ async function init(initialFolder = null) {
         document.body.classList.remove('admin-mode');
     }
 
-    const response = await fetch('/api/images');
+    const response = await fetch('/api/images.json');
     const data = await response.json();
     allImagesByFolder = data.imagesByFolder;
 

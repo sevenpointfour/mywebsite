@@ -199,13 +199,13 @@ function initializeAdminEditor() {
                 const result = await response.json();
                 if (response.ok) {
                     if (statusDiv) statusDiv.textContent = result.message || 'Content saved successfully!';
-                    let moreLinks = await fetch('/api/page-content/nav-items').then(response => response.json());
+                    let moreLinks = await fetch('/api/nav-items.json').then(response => response.json());
                     if (newPage) {
                         moreLinks.items.push({
                             name: pageNameForContent,
                             text: pageNameForContent.replace(/-/g, ' ')
                         });
-                        const response = await fetch(`/api/page-content/nav-items`, {
+                        const response = await fetch(`/api/nav-items.json`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

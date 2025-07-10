@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             pageToHighlight = pageGroupMappings[actualPageName];
         }
 
-        let moreLinks = await fetch('/api/page-content/nav-items').then(response => response.json());
+        let moreLinks = await fetch('/api/nav-items.json').then(response => response.json());
         moreLinks.items.forEach(link => {
             const linkItem = document.createElement('li');
             linkItem.classList.add('nav-item');

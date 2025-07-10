@@ -283,8 +283,21 @@ async function walk(dir, baseDir) {
     return imagesByFolder;
 }
 
+app.get('/api/nav-items.json', async (req, res) => {
+    const contentDir = path.join(__dirname, 'content');
+    const filePath = path.join(contentDir, 'nav-items.json');
+    res.sendFile(filePath);
+});
+
+app.post('/api/nav-items.json', verifyAdmin, async (req, res) => {
+    const contentDir = path.join(__dirname, 'content');
+    const filePath = path.join(contentDir, 'nav-items.json');
+    fs.writeFile(filePath, JSON.stringify(req.body, null, 2));
+    res.send('ok');
+});
+
 // handler to get list of images in the public/photos folder, grouped by subfolder
-app.get('/api/images', async (req, res) => {
+app.get('/api/images.json', async (req, res) => {
     const photosDir = path.join(__dirname, 'public', 'photos');
     try {
         const imagesByFolder = await walk(photosDir, photosDir);

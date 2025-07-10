@@ -5,8 +5,7 @@
      <!-- 1. Replace CKEditor with TinyMCE script -->
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Photo Gallery - Your Health Hub</title>
-     <script src="https://cdn.tiny.cloud/1/s7g5cgt18q6g9dw7ud0p9tksgllbcoyz3bb071o39s55c7ac/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-     <link rel="stylesheet" href="main_style.css">
+     <link rel="stylesheet" href="css/main_style.css">
      <style>
         .gallery-item {
             padding: 12px;
@@ -180,15 +179,8 @@
              <h1>Photo Gallery</h1>
          </section>
 
-        <div class="editor-container">
-            <!-- 2. Use a textarea for TinyMCE -->
-            <textarea id="editor" style="min-height: 150px;">
-                <section class="content-section"></section>
-            </textarea>
-            <!-- 4. Add a Save button -->
-            <button id="saveButton" class="cta-button" style="margin-top: 20px; margin-left: 20px;">Save Content</button>
-            <div id="status" style="margin-top: 1rem; font-style: italic; color: #555;"></div>
-        </div>
+        <section class="content-section"><div style="text-align: center;">Welcome to our photo gallery! Here you can find images from our events, facilities, and happy clients.</div></section>
+        <br>
         <section class="gallery-section">
             <div id="folder-tabs" style="text-align: center; margin-bottom: 10px;"></div>
             <div class="carousel-container">
@@ -218,9 +210,8 @@
      <footer>
          <p>&copy; 2024 Your Name/Brand. All rights reserved.</p>
      </footer>
-     <script src="load-navbar.js"></script>
-     <script src="photo-gallery.js"></script>
-     <script src="admin-editor.js"></script>
+     <script src="js/load-navbar.js"></script>
+     <script src="js/photo-gallery.js"></script>
  </body>
  </html>
  
