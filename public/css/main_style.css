@@ -352,21 +352,48 @@ a.nav-item {
 }
 
 .admin-button {
-    background-color: #007bff; /* Blue background */
+    background-color: #28a745; /* A nice, deep green for save/confirm actions */
     color: white; /* White text */
-    padding: 10px 15px; /* Padding inside the button */
+    padding: 12px 20px; /* A bit more padding */
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
     cursor: pointer; /* Pointer cursor on hover */
-    font-size: 1em; /* Font size */
+    font-size: 16px; /* Match CTA button font size */
+    font-weight: bold; /* Make text bold */
     transition: background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
 .admin-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #218838; /* A darker green for hover */
 }
 
 /* Ensure all links have a pointer cursor to indicate they are clickable */
 a[href] {
     cursor: pointer;
 }
+
+/* Table Styles (including Our Team page) */
+.team-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* Add some space above the table */
+}
+
+.team-table th, .team-table td {
+    border: 1px solid #ddd; /* A lighter, more modern border */
+    padding: 12px;
+    text-align: left;
+    vertical-align: top !important; /* This will override any inline styles from the editor */
+}
+
+.team-table img {
+    /* This makes the image responsive within its cell */
+    max-width: 100%;
+    height: auto;
+    display: block; /* Removes extra space below the image */
+}
+
+/* Column widths for the team table */
+.team-table col:nth-of-type(1) { width: 7%; }
+.team-table col:nth-of-type(2) { width: 15%; }
+.team-table col:nth-of-type(3) { width: 78%; }

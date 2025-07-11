@@ -115,6 +115,8 @@ function initializeAdminEditor() {
                 toolbar: isReadOnly ? false : 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table | image link media | help',
                 menubar: !isReadOnly,
                 height: 500,
+                // This is the crucial line: It tells the editor to use your main stylesheet.
+                content_css: '/css/main_style.css?v=1.2',
                 images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
                     const xhr = new XMLHttpRequest();
                     xhr.withCredentials = false;
