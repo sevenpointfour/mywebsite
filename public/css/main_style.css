@@ -291,6 +291,11 @@ main {
     color: #007bff; /* Or inherit, depending on desired style */
 }
 
+/* Fix for button text contrast on light cards */
+.card-blue .cta-button {
+    color: #000; /* Making button text black for better contrast */
+}
+
 /* Folder Tabs */
 .folder-tab {
     background-color: #f0f0f0;
