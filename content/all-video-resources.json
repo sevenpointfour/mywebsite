@@ -1,3 +1,32 @@
 {
-  "content": "<p>Explore our collection of informative videos on various health and wellness topics. You can add, remove, or update these videos from the admin editor.</p>\n\n<div class=\"video-gallery\">\n\n  <!-- Video 1 -->\n  <div class=\"video-item\">\n    <a href=\"https://www.youtube.com/watch?v=L131p_F-vA4\" target=\"_blank\" rel=\"noopener noreferrer\">\n      <div class=\"video-thumbnail\">\n        <img src=\"https://img.youtube.com/vi/L131p_F-vA4/hqdefault.jpg\" alt=\"Arogyanubhuti Introduction\">\n      </div>\n      <div class=\"video-info\">\n        <h3>Arogyanubhuti Introduction</h3>\n        <p>An introductory session on the principles of Arogyanubhuti for health and wellness.</p>\n      </div>\n    </a>\n  </div>\n\n  <!-- Video 2 -->\n  <div class=\"video-item\">\n    <a href=\"https://www.youtube.com/watch?v=hYv6A3p3-9A\" target=\"_blank\" rel=\"noopener noreferrer\">\n      <div class=\"video-thumbnail\">\n        <img src=\"https://img.youtube.com/vi/hYv6A3p3-9A/hqdefault.jpg\" alt=\"Health Awareness Talk\">\n      </div>\n      <div class=\"video-info\">\n        <h3>Health Awareness Talk</h3>\n        <p>A talk on health awareness, covering key aspects of the 7.4 theme.</p>\n      </div>\n    </a>\n  </div>\n\n  <!-- Video 3: The one you wanted to add -->\n  <div class=\"video-item\">\n    <a href=\"https://www.youtube.com/watch?v=qvYEN10XTB8\" target=\"_blank\" rel=\"noopener noreferrer\">\n      <div class=\"video-thumbnail\">\n        <img src=\"https://img.youtube.com/vi/qvYEN10XTB8/hqdefault.jpg\" alt=\"New Video Title\">\n      </div>\n      <div class=\"video-info\">\n        <h3>New Video Title</h3>\n        <p>A description for the new video goes here.</p>\n      </div>\n    </a>\n  </div>\n\n  <!-- TEMPLATE: To add a new video, copy the block below and edit it. -->\n  <div class=\"video-item\">\n    <a href=\"https://www.youtube.com/watch?v=VIDEO_ID_HERE\" target=\"_blank\" rel=\"noopener noreferrer\">\n      <div class=\"video-thumbnail\">\n        <img src=\"https://img.youtube.com/vi/VIDEO_ID_HERE/hqdefault.jpg\" alt=\"Video Title\">\n      </div>\n      <div class=\"video-info\">\n        <h3>Your Video Title Here</h3>\n        <p>Your brief video description here. To add a new video, copy this block and replace 'VIDEO_ID_HERE' with the ID from your YouTube video's URL.</p>\n      </div>\n    </a>\n  </div>\n\n</div>"
+  "content": [
+    "<p style=\"text-align: center;\"><span style=\"text-decoration: underline; font-size: 18pt;\"> <strong>Explore our collection of informative videos on various health and wellness topics.</strong> </span></p>",
+    "<div class=\"video-gallery\"><!-- Video 1 -->",
+    "<div class=\"video-item\"><a href=\"https://www.youtube.com/watch?v=torA76JD4oA\" target=\"_blank\" rel=\"noopener noreferrer\">",
+    "<div class=\"video-thumbnail\"><img src=\"https://img.youtube.com/vi/torA76JD4oA/hqdefault.jpg\" alt=\"Arogyanubhuti Introduction\" width=\"218\" height=\"164\"></div>",
+    "<div class=\"video-info\">",
+    "<h3>Scope and limits of 7.4 (Part 1 of 2)</h3>",
+    "</div>",
+    "</a></div>",
+    "<!-- Video 2 -->",
+    "<div class=\"video-item\"><a href=\"https://www.youtube.com/watch?v=ACbXy7CHkZQ\" target=\"_blank\" rel=\"noopener noreferrer\">",
+    "<div class=\"video-thumbnail\"><img src=\"https://img.youtube.com/vi/ACbXy7CHkZQ/hqdefault.jpg\" alt=\"Health Awareness Talk\" width=\"215\" height=\"161\"></div>",
+    "<div class=\"video-info\">",
+    "<h3>Scope and limits of 7.4 (Part 2 of 2)</h3>",
+    "</div>",
+    "</a></div>",
+    "<!-- Template (Copy this block for new videos) --><!-- ",
+    "  <div class=\"video-item\">",
+    "    <a href=\"https://www.youtube.com/watch?v=VIDEO_ID_HERE\" target=\"_blank\" rel=\"noopener noreferrer\">",
+    "      <div class=\"video-thumbnail\">",
+    "        <img src=\"https://img.youtube.com/vi/VIDEO_ID_HERE/hqdefault.jpg\" alt=\"Video Title\">",
+    "      </div>",
+    "      <div class=\"video-info\">",
+    "        <h3>Your Video Title Here</h3>",
+    "        <p>Your brief video description here. To add a new video, replace 'VIDEO_ID_HERE' with your YouTube video ID.</p>",
+    "      </div>",
+    "    </a>",
+    "  </div>",
+    "  --></div>"
+  ]
 }
