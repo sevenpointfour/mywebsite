@@ -151,6 +151,6 @@ let intervalId = setInterval(() => {
       fs.mkdirSync(dest, { recursive: true });
     }
     copyDirSync(src, dest);
-    fs.rmdirSync(buildDir, { recursive: true, force: true });
+    fs.rmSync(buildDir, { recursive: true, force: true });
   }
 }, 50);
