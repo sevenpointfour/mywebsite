@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+let args = process.argv.slice(2);
 
 const buildDir = path.join(__dirname, '../dist');
 const publicDir = path.join(__dirname, '../public');
@@ -138,4 +139,18 @@ let intervalId = setInterval(() => {
   }
   console.log('Build successful!');
   clearInterval(intervalId);
+
+  if (args.length > 0) {
+    let dest = args[0];
+    let src = buildDir;
+    if (fs.existsSync(dest)) {
+      fs.readdirSync(dest).forEach(file => {
+        file !== '.git' && fs.statSync(path.join(dest, file)).isDirectory() && fs.rmSync(path.join(dest, file), { recursive: true, force: true });
+      })
+    } else {
+      fs.mkdirSync(dest, { recursive: true });
+    }
+    copyDirSync(src, dest);
+    fs.rmdirSync(buildDir, { recursive: true, force: true });
+  }
 }, 50);
