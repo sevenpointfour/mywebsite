@@ -1,3 +1,16 @@
 {
-  "content": "<p>Watch what our clients have to say about their experience. The content on this page will be manageable from the backend.</p><p><a href=\"YOUR_VIDEO_TESTIMONIAL_LINK_1\"><img src=\"https://via.placeholder.com/300x169.png?text=Video+Testimonial+1\" alt=\"Video Testimonial 1\">&nbsp;</a></p><h3><a href=\"YOUR_VIDEO_TESTIMONIAL_LINK_1\">Client Name 1</a></h3><p>A brief note about this video testimonial.</p><p><a href=\"YOUR_VIDEO_TESTIMONIAL_LINK_2\"><img src=\"https://via.placeholder.com/300x169.png?text=Video+Testimonial+2\" alt=\"Video Testimonial 2\">&nbsp;</a></p><h3><a href=\"YOUR_VIDEO_TESTIMONIAL_LINK_2\">Client Name 2</a></h3><p>A brief note about this video testimonials.</p>"
+  "content": [
+    "<p>Watch what our clients have to say about their experience. The content on this page will be manageable from the backend.</p>",
+    "<div class=\"testimonial-gallery\"><!-- Testimonial 1 -->",
+    "<div class=\"testimonial-item\"><a href=\"**YOUR_VIDEO_TESTIMONIAL_LINK_1**\" target=\"_blank\" rel=\"noopener\"> <img src=\"**https:/img.youtube.com/vi/YOUTUBE_VIDEO_ID_1/hqdefault.jpg**\" alt=\"Video Testimonial 1\"> </a>",
+    "<h3><a href=\"**YOUR_VIDEO_TESTIMONIAL_LINK_1**\" target=\"_blank\" rel=\"noopener\">**Client Name 1**</a></h3>",
+    "<p>**A brief note about this video testimonial.**</p>",
+    "</div>",
+    "<!-- Testimonial 2 -->",
+    "<div class=\"testimonial-item\"><a href=\"**YOUR_VIDEO_TESTIMONIAL_LINK_2**\" target=\"_blank\" rel=\"noopener\"> <img src=\"**https:/img.youtube.com/vi/YOUTUBE_VIDEO_ID_2/hqdefault.jpg**\" alt=\"Video Testimonial 2\"> </a>",
+    "<h3><a href=\"**YOUR_VIDEO_TESTIMONIAL_LINK_2**\" target=\"_blank\" rel=\"noopener\">**Client Name 2**</a></h3>",
+    "<p>**A brief note about this video testimonial.**</p>",
+    "</div>",
+    "</div>"
+  ]
 }
