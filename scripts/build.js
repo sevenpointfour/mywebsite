@@ -140,17 +140,16 @@ let intervalId = setInterval(() => {
   console.log('Build successful!');
   clearInterval(intervalId);
 
-  if (args.length > 0) {
-    let dest = args[0];
-    let src = buildDir;
-    if (fs.existsSync(dest)) {
-      fs.readdirSync(dest).forEach(file => {
-        file !== '.git' && fs.statSync(path.join(dest, file)).isDirectory() && fs.rmSync(path.join(dest, file), { recursive: true, force: true });
-      })
-    } else {
-      fs.mkdirSync(dest, { recursive: true });
-    }
-    copyDirSync(src, dest);
-    fs.rmSync(buildDir, { recursive: true, force: true });
+  let dest = args[0] || '../sevenpointfourtest/';
+  let src = buildDir;
+  if (fs.existsSync(dest)) {
+    fs.readdirSync(dest).forEach(file => {
+      file !== '.git' && fs.statSync(path.join(dest, file)).isDirectory() && fs.rmSync(path.join(dest, file), { recursive: true, force: true });
+    })
+  } else {
+    fs.mkdirSync(dest, { recursive: true });
   }
+  copyDirSync(src, dest);
+  fs.rmSync(buildDir, { recursive: true, force: true });
+  
 }, 50);
