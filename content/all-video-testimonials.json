@@ -1,16 +1,21 @@
 {
   "content": [
-    "<p>Watch what our clients have to say about their experience. The content on this page will be manageable from the backend.</p>",
-    "<div class=\"testimonial-gallery\"><!-- Testimonial 1 -->",
-    "<div class=\"testimonial-item\"><a href=\"**YOUR_VIDEO_TESTIMONIAL_LINK_1**\" target=\"_blank\" rel=\"noopener\"> <img src=\"**https:/img.youtube.com/vi/YOUTUBE_VIDEO_ID_1/hqdefault.jpg**\" alt=\"Video Testimonial 1\"> </a>",
-    "<h3><a href=\"**YOUR_VIDEO_TESTIMONIAL_LINK_1**\" target=\"_blank\" rel=\"noopener\">**Client Name 1**</a></h3>",
-    "<p>**A brief note about this video testimonial.**</p>",
+    "<p style=\"text-align: center;\"><span style=\"text-decoration: underline;\"><strong>Watch what our clients have to say about their experience.</strong></span></p>",
+    "<div class=\"testimonial-gallery\"><!-- Testimonial: Sandeep Kulkarni -->",
+    "<div class=\"testimonial-item\"><a href=\"https://youtube.com/shorts/tf2o7exGhyM\" target=\"_blank\" rel=\"noopener\"> <img src=\"https://img.youtube.com/vi/tf2o7exGhyM/hqdefault.jpg\" alt=\"Sandeep Kulkarni Video Testimonial\" width=\"225\" height=\"169\"> </a>",
+    "<h3><a href=\"https://youtube.com/shorts/tf2o7exGhyM\" target=\"_blank\" rel=\"noopener\">Sandeep Kulkarni</a></h3>",
+    "<p>Celebrity, renowned Marathi cine actor shares his thoughts and appreciation for our health philosophy and his personal experience with the process.</p>",
+    "</div>",
     "</div>",
     "<!-- Testimonial 2 -->",
-    "<div class=\"testimonial-item\"><a href=\"**YOUR_VIDEO_TESTIMONIAL_LINK_2**\" target=\"_blank\" rel=\"noopener\"> <img src=\"**https:/img.youtube.com/vi/YOUTUBE_VIDEO_ID_2/hqdefault.jpg**\" alt=\"Video Testimonial 2\"> </a>",
-    "<h3><a href=\"**YOUR_VIDEO_TESTIMONIAL_LINK_2**\" target=\"_blank\" rel=\"noopener\">**Client Name 2**</a></h3>",
-    "<p>**A brief note about this video testimonial.**</p>",
+    "<div class=\"testimonial-item\"><a href=\"https://youtube.com/shorts/https://youtu.be/khAhKBrtpsU\" target=\"_blank\" rel=\"noopener\"> <img src=\"https://img.youtube.com/vi/khAhKBrtpsU/hqdefault.jpg\" alt=\"Rajshree Shivpuje Video Testimonial\" width=\"211\" height=\"158\"> </a>",
+    "<h3><a href=\"https://youtube.com/shorts/https://youtu.be/khAhKBrtpsU\" target=\"_blank\" rel=\"noopener\">Rajshree Shivpuje</a></h3>",
+    "<p>A dedicated homemaker, Rajshree Shivpuje has not only embraced our health and wellbeing philosophy with determination, but has also triumphed over personal health challenges. Her inspiring transformation led her to bring both her mother and daughter into this journey &mdash; making wellness a true family commitment. Her testimonial reflects belief, action, and results.</p>",
     "</div>",
+    "<!-- Testimonial 3 -->",
+    "<div class=\"testimonial-item\"><a href=\"https://youtube.com/shorts/https://youtube.com/shorts/RCmG4-HpwO4\" target=\"_blank\" rel=\"noopener\"> <img src=\"https://img.youtube.com/vi/RCmG4-HpwO4/hqdefault.jpg\" alt=\"Manasi Ambardekar Video Testimonial\" width=\"209\" height=\"157\"> </a>",
+    "<h3><a href=\"https://youtube.com/shorts/https://youtube.com/shorts/RCmG4-HpwO4\" target=\"_blank\" rel=\"noopener\">Manasi Ambardekar</a></h3>",
+    "<p>A powerful expression by Manasi Ambardekar, who shares how the 7.4 process reversed her diabetes, achieved weightloss and could sustain over a period of 5 years.</p>",
     "</div>"
   ]
 }
