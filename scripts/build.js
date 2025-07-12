@@ -10,27 +10,6 @@ if (fs.existsSync(buildDir)) {
 }
 fs.mkdirSync(buildDir);
 
-// Function to copy directories recursively
-function copyDirSync(src, dest) {
-  fs.mkdirSync(dest, { recursive: true });
-  let entries = fs.readdirSync(src, { withFileTypes: true });
-
-  for (let entry of entries) {
-    let srcPath = path.join(src, entry.name);
-    let destPath = path.join(dest, entry.name);
-
-    entry.isDirectory() ?
-      copyDirSync(srcPath, destPath) :
-      fs.copyFileSync(srcPath, destPath);
-  }
-}
-
-// 2. Copy directories
-copyDirSync(path.join(publicDir, 'css'), path.join(buildDir, 'css'));
-copyDirSync(path.join(publicDir, 'photos'), path.join(buildDir, 'photos'));
-copyDirSync(path.join(publicDir, 'js'), path.join(buildDir, 'js'));
-copyDirSync(path.join(publicDir, 'audio'), path.join(buildDir, 'audio'));
-
 
 // 3. Copy all .html files
 fs.readdirSync(publicDir).forEach(file => {
@@ -55,9 +34,16 @@ let patterns = [
   'status',
   'admin-editor.js'
 ]
+const unusedImageMap = new Map();
+let editorImagePath = path.join(publicDir, 'photos', '_editor');
+fs.readdirSync(editorImagePath).forEach(file => {
+  if (file.endsWith('.jpg') || file.endsWith('.png') || file.endsWith('.jpeg')) {
+    unusedImageMap.set(path.join(editorImagePath, file), file);
+  }
+});
+let tasks = new Set();
 fs.readdirSync(contentDir).forEach(file => {
   if (file.endsWith('.json')) {
-
     let content = JSON.parse(fs.readFileSync(path.join(contentDir, file), 'utf8'));
     if (content.content) {
       if (typeof content.content === 'string')
@@ -73,6 +59,7 @@ fs.readdirSync(contentDir).forEach(file => {
     const filename = file.replace('.json', '.html');
     const url = `http://localhost:3010/${filename}`;
 
+    tasks.add(file);
     http.get(url, (res) => {
       let body = '';
       res.on('data', (chunk) => {
@@ -81,10 +68,17 @@ fs.readdirSync(contentDir).forEach(file => {
       res.on('end', () => {
         let cleanedBody = body.split('\n').filter(line => !patterns.find(pattern => line.includes(pattern)) && !skip.has(line.trim())).join('\n');
         cleanedBody = cleanedBody.replaceAll('<section class="content-section"></section>', `<section class="content-section">${content}</section>`);
+        Array.from(unusedImageMap.entries()).forEach(([k, v]) => {
+          if (cleanedBody.includes(v)) {
+            unusedImageMap.delete(k);
+          }
+        })
         fs.writeFileSync(path.join(buildDir, filename), cleanedBody);
+        tasks.delete(file);
       });
     }).on('error', (e) => {
       console.error(`Got error: ${e.message}`);
+      tasks.delete(file);
     });
   }
 });
@@ -96,6 +90,7 @@ let apis =
   ]
 apis.forEach(api => {
   const url = `http://localhost:3010${api}`;
+  tasks.add(api);
   http.get(url, (res) => {
     let body = '';
     res.on('data', (chunk) => {
@@ -104,10 +99,43 @@ apis.forEach(api => {
     res.on('end', () => {
       path.dirname(api) && fs.mkdirSync(path.join(buildDir, path.dirname(api)), { recursive: true });
       fs.writeFileSync(path.join(buildDir, api), body);
+      tasks.delete(api);
     });
   }).on('error', (e) => {
     console.error(`Got error: ${e.message}`);
+    tasks.delete(api);
   });
 });
 
-console.log('Build successful!');
+let intervalId = setInterval(() => {
+  if (tasks.size > 0) {
+    console.log('waiting for pending async tasks to complete', tasks.size);
+    return;
+  }
+  // 2. Copy directories
+  copyDirSync(path.join(publicDir, 'css'), path.join(buildDir, 'css'));
+  copyDirSync(path.join(publicDir, 'photos'), path.join(buildDir, 'photos'));
+  copyDirSync(path.join(publicDir, 'js'), path.join(buildDir, 'js'));
+  copyDirSync(path.join(publicDir, 'audio'), path.join(buildDir, 'audio'));
+
+  // Function to copy directories recursively
+  function copyDirSync(src, dest) {
+    fs.mkdirSync(dest, { recursive: true });
+    let entries = fs.readdirSync(src, { withFileTypes: true });
+
+    for (let entry of entries) {
+      let srcPath = path.join(src, entry.name);
+      let destPath = path.join(dest, entry.name);
+
+      if (unusedImageMap.has(srcPath)) {
+        console.log('Skippping unused image', srcPath);
+      } else {
+        entry.isDirectory() ?
+          copyDirSync(srcPath, destPath) :
+          fs.copyFileSync(srcPath, destPath);
+      }
+    }
+  }
+  console.log('Build successful!');
+  clearInterval(intervalId);
+}, 50);
