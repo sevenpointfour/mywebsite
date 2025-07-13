@@ -1,7 +1,30 @@
 {
   "content": [
-    "<p>Read articles of relevance to Health and Nutrition</p>",
-    "<ul>",
+    "<p>Alongwith my three books \"<span style=\"font-size: 14pt;\"><strong>Aygyacha Mahamarg, Arogyacha Lochya and Vishwabandhutvacha Ashtang Yog</strong></span>, I recommend following books for Health, Welbeing, Peace and Harmony.&nbsp;</p>",
+    "<div class=\"recommended-book\">",
+    "<h3>📖 Love and Survival by Dr. Dean Ornish</h3>",
+    "<p>This powerful book by renowned physician Dr. Dean Ornish explores the profound connection between emotional well-being and physical health. Drawing from scientific research, he shows how love, intimacy, and social support are as vital to survival as diet and exercise. <br>A must-read for anyone who wants to heal not just the body, but the heart and mind as well.</p>",
+    "<div class=\"recommended-book\">",
+    "<h3>📖 Trick and Treat by Barry Groves</h3>",
+    "<p>In this thought-provoking book, Dr. Barry Groves challenges many modern health myths promoted by mainstream nutrition and medicine. Backed by decades of research, he argues that fat is not the enemy, and that many common health recommendations may actually harm more than help. <br>This book invites you to question conventional wisdom and take charge of your health with deeper understanding.</p>",
+    "</div>",
+    "<div class=\"recommended-book\">",
+    "<h3>📖 What Your Doctor Doesn&rsquo;t Know About Nutritional Medicine May Be Killing You &ndash; Dr. Ray Strand</h3>",
+    "<p>In this eye-opening book, Dr. Ray Strand shares his journey from a skeptical physician to a strong advocate of nutritional medicine. He explains how conventional medical training often overlooks the healing power of nutrients and antioxidants. <br>A compelling read that empowers you to make informed choices for prevention and long-term wellness beyond prescriptions.</p>",
+    "</div>",
+    "<div class=\"recommended-book\">",
+    "<h3>📖 Death by Prescription &ndash; Dr. Ray Strand</h3>",
+    "<p>In *Death by Prescription*, Dr. Ray Strand exposes the often-overlooked risks of modern pharmaceuticals. Drawing from medical research and personal experience, he reveals how side effects, overprescribing, and lack of preventive focus can be harmful to long-term health. <br>This book encourages readers to take personal responsibility and explore safer, nutrition-based alternatives to healing.</p>",
+    "</div>",
+    "<div class=\"recommended-book\">",
+    "<h3>📖 घराघरांत ज्ञानेश्वरी जन्मती &ndash; डॉ. ह. वि. सरदेसाई</h3>",
+    "<p>हे पुस्तक सांगते की संत ज्ञानेश्वरांच्या ज्ञानाचे, प्रेमाचे आणि आध्यात्मिकतेचे बीज प्रत्येक घरातही पेरले जाऊ शकते. योग्य वातावरण, प्रेमळ संस्कार आणि समजूतदारपणा यामुळे घराघरांतही ज्ञानेश्वरी जन्म घेऊ शकते. <br>एक प्रेरणादायी ग्रंथ &mdash; जो आपल्या दृष्टीकोनात मूलगामी परिवर्तन घडवू शकतो.</p>",
+    "</div>",
+    "<div class=\"recommended-book\">",
+    "<h3>📖 आहार आणि आरोग्य &ndash; डॉ. ह. वि. सरदेसाई</h3>",
+    "<p>&nbsp; आधुनिक आरोग्यविज्ञानाच्या आधारे डॉ. सरदेसाई यांनी आहाराचे सखोल महत्त्व उलगडले आहे.<br>आरोग्याच्या मूलभूत संकल्पनांचा शोध घेणाऱ्यांसाठी हे पुस्तक अत्यंत उपयुक्त आहे.</p>",
+    "</div>",
+    "<!-- <ul>",
     "<li>",
     "<p><a href=\"YOUR_AUDIO_LINK_1\">Article 1</a></p>",
     "<p>A short description of Article 1.</p>",
@@ -10,6 +33,6 @@
     "<p><a href=\"YOUR_AUDIO_LINK_2\">Article 2</a></p>",
     "<p>A short description of Article 2.</p>",
     "</li>",
-    "</ul>"
+    "</ul>--></div>"
   ]
 }
