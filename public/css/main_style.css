@@ -90,10 +90,10 @@ header {
 }
 
 .navbar-links li {
-    margin: 5px;
+    margin: 1px;
     min-width: 12em;
     text-align: center;
-    padding: 6px;
+    padding: 3px;
 }
 
 .navbar-links a {
