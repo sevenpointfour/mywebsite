@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         navbarPlaceholder.innerHTML = data;
 
         // Determine which navigation link to highlight
-        const actualPageName = window.location.pathname.split("/").pop() || "index.html";
+        let actualPageName = window.location.pathname.split("/").pop() || "index.html";
         let pageToHighlight = actualPageName;
 
         // Mappings from detail pages to their main navigation item's filename
@@ -40,6 +40,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (pageGroupMappings[actualPageName]) {
             pageToHighlight = pageGroupMappings[actualPageName];
         }
+
+        actualPageName = actualPageName.replace(/\.html/, '');
+        pageToHighlight = pageToHighlight.replace(/\.html/, '');
 
         let moreLinks = await fetch('/api/nav-items.json').then(response => response.json());
         moreLinks.items.forEach(link => {
@@ -81,7 +84,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const navLinks = navbarPlaceholder.querySelectorAll(".navbar-links a");
         navLinks.forEach(link => {
-            const linkPage = link.getAttribute("href").split("/").pop();
+            let linkPage = link.getAttribute("href").split("/").pop();
+            linkPage = linkPage.replace(/\.html/, '');
             if (linkPage === pageToHighlight) {
                 link.classList.add("active");
             }

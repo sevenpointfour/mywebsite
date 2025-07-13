@@ -6,6 +6,8 @@ body {
     background-color: #f4f4f4;
     color: #333;
     line-height: 1.6;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* Header and Navigation */
@@ -15,33 +17,83 @@ header {
     padding: 1rem 0;
     position: sticky;
     top: 0;
-    z-index: 1000; /* Ensure navbar stays on top */
+    z-index: 1000;
+    /* Ensure navbar stays on top */
 }
 
 .navbar {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
-    max-width: 1200px;
+    flex-wrap: wrap;
 }
 
+
 .navbar-brand {
-    font-size: 1.8em;
+    font-size: 2.5em;
     font-weight: bold;
+    text-align: center;
+    text-shadow: 2px 2px 2px yellow;
+    color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-brand img {
+    width: 100%;
 }
 
 .navbar-links {
     list-style-type: none;
     margin: 0;
     padding: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    font-size: larger;
+    display: none;
+}
+
+.navbar:hover .navbar-links {
     display: flex;
-    flex-wrap: wrap; /* Allow items to wrap to the next line */
+}
+
+@media (min-width: 400px) {
+    .navbar-links {
+        display: flex;
+    }
+}
+
+@media (max-width: 400px) {
+
+    .navbar-brand::after {
+        right: 0;
+        top: 0;
+        content: "Menu";
+        padding: 6px;
+        border: 1px solid yellow;
+        font-size: 1rem;
+        margin: 10px;
+        display: block;
+        text-shadow: none;
+
+    }
+
+    .navbar-links {
+        flex-direction: column;
+        width: 100%;
+    }
 }
 
 .navbar-links li {
-    margin-left: 20px;
+    margin: 5px;
+    min-width: 12em;
+    text-align: center;
+    padding: 6px;
 }
 
 .navbar-links a {
@@ -52,10 +104,12 @@ header {
     transition: background-color 0.3s ease;
 }
 
-.navbar-links a:hover,
-.navbar-links a.active {
-    background-color: #04581b; /* Dark green background on hover/active */
-    color: #ddd; /* Fainter text color on hover/active */
+.navbar-links li:hover,
+.navbar-links li.active {
+    background-color: #04581b;
+    /* Dark green background on hover/active */
+    color: #ddd;
+    /* Fainter text color on hover/active */
 }
 
 /* Main Content Area */
@@ -65,7 +119,7 @@ main {
     max-width: 1200px;
     padding: 20px;
     background-color: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .hero {
@@ -82,34 +136,39 @@ main {
 }
 
 .cta-button {
-  display: inline-block;
-  padding: 12px 24px;
-  color: #ffffff;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 5px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 15px; /* Retained from original style */
+    display: inline-block;
+    padding: 12px 24px;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 15px;
+    /* Retained from original style */
 }
 
 .cta-button.cta-green {
-  background-color: #28a745; /* A nice green color */
+    background-color: #28a745;
+    /* A nice green color */
 }
 
 .cta-button.cta-green:hover {
-  background-color: #218838; /* A darker green for hover */
+    background-color: #218838;
+    /* A darker green for hover */
 }
 
 .cta-button.cta-blue {
-  background-color: #007bff; /* A nice blue color */
+    background-color: #007bff;
+    /* A nice blue color */
 }
 
 .cta-button.cta-blue:hover {
-  background-color: #0056b3; /* A darker blue for hover */
+    background-color: #0056b3;
+    /* A darker blue for hover */
 }
 
 .intro {
@@ -120,20 +179,25 @@ main {
 /* Generic Page Title Section */
 .page-title-section {
     text-align: center;
-    padding: 5px 0; /* Further reduced top/bottom padding */
-    margin-bottom: 8px; /* Further reduced space below title section (rounded 7.5px) */
+    padding: 5px 0;
+    /* Further reduced top/bottom padding */
+    margin-bottom: 8px;
+    /* Further reduced space below title section (rounded 7.5px) */
     border-bottom: 2px solid #eee;
 }
 
 .page-title-section h1 {
-    color: #333; /* Or your primary heading color */
+    color: #333;
+    /* Or your primary heading color */
 }
 
 /* Services Page Specifics (Optional Grid Layout) */
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
-    gap: 20px; /* Space between service items */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* Responsive columns */
+    gap: 20px;
+    /* Space between service items */
     margin-top: 20px;
 }
 
@@ -142,13 +206,14 @@ main {
     padding: 20px;
     border: 1px solid #eee;
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 /* Resources Page Specifics */
 .resource-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive columns for videos */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    /* Responsive columns for videos */
     gap: 20px;
     margin-top: 20px;
     margin-bottom: 30px;
@@ -159,7 +224,7 @@ main {
     padding: 15px;
     border: 1px solid #eee;
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .resource-item img {
@@ -179,7 +244,8 @@ main {
     padding-left: 0;
 }
 
-.resource-list .resource-item { /* For audio items in a list */
+.resource-list .resource-item {
+    /* For audio items in a list */
     margin-bottom: 15px;
 }
 
@@ -191,7 +257,8 @@ main {
 .testimonial-item {
     background-color: #f9f9f9;
     padding: 20px;
-    border-left: 5px solid #007bff; /* Accent color border */
+    border-left: 5px solid #007bff;
+    /* Accent color border */
     margin-bottom: 20px;
     border-radius: 0 5px 5px 0;
 }
@@ -200,6 +267,7 @@ main {
     margin: 0;
     font-style: italic;
 }
+
 .testimonial-item footer {
     text-align: right;
     margin-top: 10px;
@@ -211,11 +279,13 @@ main {
 .contact-details-section {
     display: flex;
     flex-wrap: wrap;
-    gap: 30px; /* Space between contact info and social media */
+    gap: 30px;
+    /* Space between contact info and social media */
 }
 
 .contact-info {
-    flex: 2; /* Takes more space */
+    flex: 2;
+    /* Takes more space */
     min-width: 300px;
 }
 
@@ -230,22 +300,28 @@ main {
 }
 
 .social-icon {
-    display: inline-block; /* Or block if you want them on new lines */
+    display: inline-block;
+    /* Or block if you want them on new lines */
     margin-right: 15px;
-    margin-bottom: 10px; /* Spacing if they wrap */
+    margin-bottom: 10px;
+    /* Spacing if they wrap */
     font-size: 1.2em;
     color: #007bff;
     text-decoration: none;
 }
-.social-icon i { /* Style for Font Awesome icons */
+
+.social-icon i {
+    /* Style for Font Awesome icons */
     margin-right: 8px;
 }
 
 /* About Page Cards */
 .about-cards-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns */
-    gap: 20px; /* Space between cards */
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 columns */
+    gap: 20px;
+    /* Space between cards */
 }
 
 .about-card-item {
@@ -253,47 +329,61 @@ main {
     padding: 20px;
     border: 1px solid #eee;
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    text-align: center; /* Or left, as you prefer */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    /* Or left, as you prefer */
 }
 
 /* Card Color Utility Classes */
 .card-yellow {
-    background-color: #ffc107; /* Amber */
+    background-color: #ffc107;
+    /* Amber */
     color: white;
 }
+
 .card-blue {
-    background-color: #e9ecef; /* Light Grey - similar to hero section */
-    color: #333; /* Dark text for light background */
+    background-color: #e9ecef;
+    /* Light Grey - similar to hero section */
+    color: #333;
+    /* Dark text for light background */
 }
+
 .card-green {
-    background-color: #28a745; /* Success Green */
+    background-color: #28a745;
+    /* Success Green */
     color: white;
 }
+
 .card-brown {
-    background-color: #795548; /* Brown */
+    background-color: #795548;
+    /* Brown */
     color: white;
 }
+
 .card-red {
-    background-color: #dc3545; /* Danger Red */
+    background-color: #dc3545;
+    /* Danger Red */
     color: white;
 }
+
 /* Ensure links within colored cards (that are not buttons) are appropriately colored */
-.card-yellow a:not(.cta-button), 
-.card-green a:not(.cta-button), 
-.card-brown a:not(.cta-button), 
+.card-yellow a:not(.cta-button),
+.card-green a:not(.cta-button),
+.card-brown a:not(.cta-button),
 .card-red a:not(.cta-button) {
     color: white;
 }
 
 /* For the new light grey card-blue, ensure links are standard blue or inherit */
 .card-blue a:not(.cta-button) {
-    color: #007bff; /* Or inherit, depending on desired style */
+    color: #007bff;
+    /* Or inherit, depending on desired style */
 }
 
 /* Fix for button text contrast on light cards */
 .card-blue .cta-button {
-    color: #000; /* Making button text black for better contrast */
+    color: #000;
+    /* Making button text black for better contrast */
 }
 
 /* Folder Tabs */
@@ -323,6 +413,7 @@ main {
     padding-bottom: 15px;
     border-bottom: 1px solid #eee;
 }
+
 .faq-item:last-child {
     border-bottom: none;
 }
@@ -350,26 +441,40 @@ a.nav-item {
 
 /* Admin Button Styling */
 .admin-button-container {
-    display: flex; /* Arrange buttons in a row */
-    gap: 10px; /* Space between buttons */
-    margin-bottom: 15px; /* Space below the button container */
-    justify-content: center; /* Center the buttons */
+    display: flex;
+    /* Arrange buttons in a row */
+    gap: 10px;
+    /* Space between buttons */
+    margin-bottom: 15px;
+    /* Space below the button container */
+    justify-content: center;
+    /* Center the buttons */
 }
 
 .admin-button {
-    background-color: #28a745; /* A nice, deep green for save/confirm actions */
-    color: white; /* White text */
-    padding: 12px 20px; /* A bit more padding */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Match CTA button font size */
-    font-weight: bold; /* Make text bold */
-    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    background-color: #28a745;
+    /* A nice, deep green for save/confirm actions */
+    color: white;
+    /* White text */
+    padding: 12px 20px;
+    /* A bit more padding */
+    border: none;
+    /* No border */
+    border-radius: 5px;
+    /* Rounded corners */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    font-size: 16px;
+    /* Match CTA button font size */
+    font-weight: bold;
+    /* Make text bold */
+    transition: background-color 0.3s ease;
+    /* Smooth transition for hover effect */
 }
 
 .admin-button:hover {
-    background-color: #218838; /* A darker green for hover */
+    background-color: #218838;
+    /* A darker green for hover */
 }
 
 /* Ensure all links have a pointer cursor to indicate they are clickable */
@@ -381,24 +486,37 @@ a[href] {
 .team-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px; /* Add some space above the table */
+    margin-top: 20px;
+    /* Add some space above the table */
 }
 
-.team-table th, .team-table td {
-    border: 1px solid #ddd; /* A lighter, more modern border */
+.team-table th,
+.team-table td {
+    border: 1px solid #ddd;
+    /* A lighter, more modern border */
     padding: 12px;
     text-align: left;
-    vertical-align: top !important; /* This will override any inline styles from the editor */
+    vertical-align: top !important;
+    /* This will override any inline styles from the editor */
 }
 
 .team-table img {
     /* This makes the image responsive within its cell */
     max-width: 100%;
     height: auto;
-    display: block; /* Removes extra space below the image */
+    display: block;
+    /* Removes extra space below the image */
 }
 
 /* Column widths for the team table */
-.team-table col:nth-of-type(1) { width: 7%; }
-.team-table col:nth-of-type(2) { width: 15%; }
-.team-table col:nth-of-type(3) { width: 78%; }
+.team-table col:nth-of-type(1) {
+    width: 7%;
+}
+
+.team-table col:nth-of-type(2) {
+    width: 15%;
+}
+
+.team-table col:nth-of-type(3) {
+    width: 78%;
+}
