@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             let linkPage = link.getAttribute("href").split("/").pop();
             linkPage = linkPage.replace(/\.html/, '');
             if (linkPage === pageToHighlight) {
-                link.classList.add("active");
+                link.parentElement.classList.add("active");
             }
         });
 
