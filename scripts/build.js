@@ -69,6 +69,7 @@ fs.readdirSync(contentDir).forEach(file => {
       res.on('end', () => {
         let cleanedBody = body.split('\n').filter(line => !patterns.find(pattern => line.includes(pattern)) && !skip.has(line.trim())).join('\n');
         cleanedBody = cleanedBody.replaceAll('<section class="content-section"></section>', `<section class="content-section">${content}</section>`);
+        cleanedBody= cleanedBody.replaceAll('http://localhost:3020', 'https://sevenpointfour.in/consulttest')
         Array.from(unusedImageMap.entries()).forEach(([k, v]) => {
           if (cleanedBody.includes(v)) {
             unusedImageMap.delete(k);
