@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 2rem; background-color: #f0f2f5; }
+        .content { max-width: 800px; margin: auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        .login-prompt { text-align: center; padding: 2rem; border: 1px solid #ccc; border-radius: 8px; }
+        button { padding: 0.5rem 1rem; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #c82333; }
+    </style>
+</head>
+<body>
+
+<div id="dashboard" class="content hidden">
+    <h1>Welcome, Admin!</h1>
+    <p>You have successfully logged in. You can now manage your website content.</p>
+    <p>Go to <a href="/index.html">the homepage</a> to see the edit controls.</p>
+    <br>
+    <button id="logout-button">Logout</button>
+</div>
+
+<div id="login-prompt" class="login-prompt content hidden">
+    <h2>Access Denied</h2>
+    <p>You are not logged in. Please go to the admin login page.</p>
+    <a href="/admin-login.html">Go to Login</a>
+</div>
+
+<script>
+    const dashboard = document.getElementById('dashboard');
+    const loginPrompt = document.getElementById('login-prompt');
+    const logoutButton = document.getElementById('logout-button');
+
+    window.addEventListener('load', async () => {
+        const token = localStorage.getItem('adminToken');
+
+        if (!token) {
+            showLoginPrompt();
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/admin/verify', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+
+            if (response.ok && data.isAdmin) {
+                showDashboard();
+            } else {
+                localStorage.removeItem('adminToken');
+                showLoginPrompt();
+            }
+        } catch (error) {
+            console.error('Verification failed:', error);
+            showLoginPrompt();
+        }
+    });
+
+    logoutButton.addEventListener('click', () => {
+        localStorage.removeItem('adminToken');
+        window.location.href = '/admin-login.html';
+    });
+
+    const showDashboard = () => { dashboard.classList.remove('hidden'); loginPrompt.classList.add('hidden'); };
+    const showLoginPrompt = () => { dashboard.classList.add('hidden'); loginPrompt.classList.remove('hidden'); };
+</script>
+
+</body>
+</html>

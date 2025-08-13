@@ -1,114 +1,118 @@
-admin; password123
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Website Content</title>
-    <link rel="stylesheet" href="css/main_style.css">
+    <title>Admin Login</title>
     <style>
-        .login-container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 30px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            border-radius: 8px;
-        }
-        .login-container h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .login-container label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        .login-container input[type="text"],
-        .login-container input[type="password"] {
-            width: calc(100% - 22px); /* Account for padding and border */
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .login-container button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .login-container button:hover {
-            background-color: #0056b3;
-        }
-        .error-message {
-            color: red;
-            text-align: center;
-            margin-bottom: 15px;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f2f5; margin: 0; }
+        .login-container { background: white; padding: 2rem 2.5rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 380px; }
+        h2 { text-align: center; margin-bottom: 1.5rem; color: #333; }
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555; }
+        input { width: 100%; padding: 0.75rem; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+        button { width: 100%; padding: 0.75rem; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; font-weight: 600; }
+        button:hover { background-color: #0056b3; }
+        .hidden { display: none; }
+        .message { text-align: center; padding: 1rem; margin-top: 1rem; border-radius: 4px; font-size: 0.9rem; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     </style>
 </head>
 <body>
-    <div id="navbar-placeholder"></div>
 
-    <main>
-        <div class="login-container">
-            <h1>Admin Login (Website Content)</h1>
-            <div id="errorMessage" class="error-message" style="display:none;"></div>
-            <form id="adminLoginForm">
-                <div>
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-                <div>
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <button type="submit">Login</button>
-            </form>
+<div class="login-container">
+    <h2>Admin Login</h2>
+
+    <!-- Step 1: Username Form -->
+    <form id="username-form">
+        <div class="form-group">
+            <label for="username">Email Address</label>
+            <input type="email" id="username" name="username" required autocomplete="username">
         </div>
-    </main>
+        <button type="submit">Get Login Code</button>
+    </form>
 
-    <footer>
-        <p>&copy; 2024 Your Name/Brand. All rights reserved.</p>
-    </footer>
+    <!-- Step 2: OTP Form (initially hidden) -->
+    <form id="otp-form" class="hidden">
+        <div class="form-group">
+            <label for="otp">One-Time Code</label>
+            <input type="text" id="otp" name="otp" required pattern="\d{6}" title="Enter the 6-digit code from your email." autocomplete="one-time-code">
+        </div>
+        <button type="submit">Verify & Login</button>
+    </form>
 
-    <script src="js/load-navbar.js"></script>
-    <script>
-        document.getElementById('adminLoginForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorMessageDiv = document.getElementById('errorMessage');
-            errorMessageDiv.style.display = 'none'; // Hide error message initially
+    <div id="message-area" class="message hidden"></div>
+</div>
 
-            try {
-                const response = await fetch('/api/admin/login', { // This endpoint needs to be created in server.js
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const result = await response.json();
-                if (response.ok && result.token) {
-                    localStorage.setItem('adminWebsiteToken', result.token); // Store the token
-                    window.location.href = '/index.html'; // Redirect to homepage or admin dashboard
-                } else {
-                    errorMessageDiv.textContent = result.error || 'Login failed. Please check your credentials.';
-                    errorMessageDiv.style.display = 'block';
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                errorMessageDiv.textContent = 'An error occurred during login. Please try again.';
-                errorMessageDiv.style.display = 'block';
+<script>
+    const usernameForm = document.getElementById('username-form');
+    const otpForm = document.getElementById('otp-form');
+    const messageArea = document.getElementById('message-area');
+    const usernameInput = document.getElementById('username');
+
+    // Handle Step 1: Submitting username to get OTP
+    usernameForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = usernameInput.value;
+        
+        showMessage('', ''); // Clear previous messages
+
+        try {
+            const response = await fetch('/api/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                showMessage(data.message, 'success');
+                usernameForm.classList.add('hidden');
+                otpForm.classList.remove('hidden');
+                document.getElementById('otp').focus();
+            } else {
+                showMessage(data.error || 'An unknown error occurred.', 'error');
             }
-        });
-    </script>
+        } catch (error) {
+            showMessage('Failed to connect to the server.', 'error');
+        }
+    });
+
+    // Handle Step 2: Submitting OTP to verify
+    otpForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = usernameInput.value; // Get username from the first form
+        const otp = document.getElementById('otp').value;
+
+        showMessage('', ''); // Clear previous messages
+
+        try {
+            const response = await fetch('/api/admin/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, otp })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('adminToken', data.token);
+                showMessage('Login successful! Redirecting...', 'success');
+                setTimeout(() => window.location.href = '/admin-dashboard.html', 1500);
+            } else {
+                showMessage(data.error || 'Verification failed.', 'error');
+            }
+        } catch (error) {
+            showMessage('Failed to connect to the server.', 'error');
+        }
+    });
+
+    function showMessage(text, type) {
+        messageArea.textContent = text;
+        messageArea.className = `message ${type}`;
+        messageArea.classList.toggle('hidden', !text);
+    }
+</script>
+
 </body>
 </html>
