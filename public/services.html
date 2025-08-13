@@ -7,6 +7,26 @@
      <!-- CKEditor script can remain if other pages use it, but it won't be initialized for #editor on this page -->
      <!-- <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script> -->
      <link rel="stylesheet" href="css/main_style.css">
+     <style>
+        /* Reduce card height and make title clickable */
+        .about-card-item, .service-item, .resource-item {
+            padding: 1rem; /* Further reduced padding */
+        }
+        .about-card-item h3 a, .service-item h3 a, .resource-item h3 a {
+            display: inline-block; /* Ensure border wraps content */
+            text-decoration: none;
+            color: inherit; /* Inherit color from h3 */
+            border: 3px solid #333; /* Dark border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 6px 12px; /* Padding inside the border */
+            transition: background-color 0.2s, color 0.2s; /* Smooth hover transition */
+        }
+        .about-card-item h3 a:hover, .service-item h3 a:hover, .resource-item h3 a:hover {
+            background-color: #333; /* Dark background on hover */
+            color: white; /* White text on hover */
+            text-decoration: none;
+        }
+    </style>
  </head>
  <body>
      <div id="navbar-placeholder"></div>
@@ -21,45 +41,33 @@
  
                  <div class="services-grid">
                      <div class="service-item card-yellow">
-                         <h3>Personalized Health Consultation</h3>
-                         <p>In-depth one-on-one consultations to understand your unique health needs and create a tailored plan. This includes access to our comprehensive client management portal for ongoing support and tracking.</p>
-                         <a href="consultation-info.html" class="cta-button">Learn More & Register</a>
+                         <h3><a href="consultation-info.html">Personalized Health Consultation</a></h3>
+                         <p>In-depth one-on-one consultations to understand your unique health needs and create a tailored plan.</p>
                      </div>
  
                      <div class="service-item card-blue">
-                         <h3>Detox Program</h3>
+                         <h3><a href="detox-program.html">Detox Program</a></h3>
                          <p>A guided program to help cleanse and rejuvenate your body, supporting its natural detoxification processes.</p>
-                         <a href="detox-program.html" class="cta-button">Learn More</a>
                      </div>
  
                      <div class="service-item card-green">
-                         <h3>Beyond 7.4 Program</h3>
+                         <h3><a href="beyond74-program.html">Beyond 7.4 Program</a></h3>
                          <p>An advanced program focusing on optimizing your body's pH and overall well-being for long-term health benefits.</p>
-                         <a href="beyond74-program.html" class="cta-button">Learn More</a>
                      </div>
  
                      <div class="service-item card-brown">
-                         <h3>Health Awareness Course (Online/Offline)</h3>
+                         <h3><a href="health-awareness-course.html">Health Awareness Course (Online/Offline)</a></h3>
                          <p>Comprehensive courses designed to empower you with knowledge about health and wellness, available both online and in-person.</p>
-                         <a href="health-awareness-course.html" class="cta-button">Learn More</a>
                      </div>
  
                      <div class="service-item card-red">
-                         <h3>Introduction Talks</h3>
+                         <h3><a href="introduction-talks.html">Introduction Talks</a></h3>
                          <p>Engaging and informative talks on various health topics, perfect for groups, corporates, or community events.</p>
-                         <a href="introduction-talks.html" class="cta-button">Learn More</a>
-                     </div>
- 
-                     <div class="service-item card-yellow">
-                         <h3>1 Year Training Course</h3>
-                         <p>An intensive year-long training program for those looking to deepen their understanding and practice of health principles.</p>
-                         <a href="1yr-training-course.html" class="cta-button">Learn More</a>
                      </div>
  
                      <div class="service-item card-blue">
-                         <h3>Dhanwantari Yog Training (Online/Offline)</h3>
+                         <h3><a href="dhanwantari-yog-training.html">Dhanwantari Yog Training (Online/Offline)</a></h3>
                          <p>Authentic Yog training based on Dhanwantari principles, available through both online and in-person sessions.</p>
-                         <a href="dhanwantari-yog-training.html" class="cta-button">Learn More</a>
                      </div>
                      <!-- Add more services as needed -->
                  </div>

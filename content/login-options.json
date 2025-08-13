@@ -1,13 +1,11 @@
 {
   "content": [
-    "<p>Welcome! Please choose an option below to access your personalized health resources or to begin your journey with us.</p>",
-    "<p>&nbsp;</p>",
-    "<h3>New User Registration</h3>",
-    "<p>Not yet a member? Register here to get started with our services or courses.</p>",
-    "<p><a href=\"http://localhost:3020/register.html\" class=\"cta-button cta-green\">Register Now</a></p>",
-    "<p>If you have any trouble logging in or registering, please <a href=\"contact.html\">contact us</a> for assistance.&nbsp;</p>",
-    "<h3>Client Portal Login</h3>",
-    "<p>Access your personalized health plans, track your progress, and communicate with your consultant.</p>",
-    "<p><a href=\"http://localhost:3020/client-login.html\" class=\"cta-button cta-blue\">Login to Client Portal</a></p>"
+    "<p style=\"text-align: center;\">&nbsp;</p>",
+    "<p style=\"text-align: center;\">Want to enrol for consultation? <span style=\"font-size: 14pt;\"><strong>Register</strong></span> here to get started with our services or courses.</p>",
+    "<p style=\"text-align: center;\"><a class=\"cta-button cta-green\" href=\"http://localhost:3020/register.html\">Client Registration</a></p>",
+    "<p style=\"text-align: center;\">If you have any trouble logging in or registering, please <a href=\"contact.html\">contact us</a> for assistance.&nbsp;</p>",
+    "<h3 style=\"text-align: center;\">Client Portal Login</h3>",
+    "<p style=\"text-align: center;\">Access your personalized health plans, track your progress, and communicate with your consultant.</p>",
+    "<p style=\"text-align: center;\"><a class=\"cta-button cta-blue\" href=\"http://localhost:3020/client-login.html\">Login to Client Portal</a></p>"
   ]
 }

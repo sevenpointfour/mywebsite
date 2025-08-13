@@ -1,12 +1,94 @@
   <header>
+      <style>
+        .navbar-title {
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            padding-bottom: 10px;
+        }
+        /* Set navbar font size */
+        .navbar-links {
+            font-size: 14px;
+        }
+
+        /* Dropdown container */
+        .navbar-links .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #e0f7fa; /* Light Blue */
+            min-width: 280px; /* Wider for longer service names */
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 100; /* Make sure it's on top */
+            list-style: none;
+            padding: 10px 0;
+            margin-top: 5px;
+            border-radius: 4px;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: #333; /* Dark text for light background */
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            font-size: 0.9em;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #b2ebf2; /* Slightly darker light blue on hover */
+        }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Divider style */
+        .dropdown-content hr {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 8px 15px;
+        }
+      </style>
       <nav class="navbar">
-          <div class="navbar-brand">
+          <div class="navbar-title">Seven Point Four</div>
+          <!-- <div class="navbar-brand">
                 <img src="/photos/_images/logo.png" alt="" srcset="">
-          </div>
+          </div> -->
           <ul class="navbar-links">
               <li><a href="index.html">Home</a></li>
-              <li><a href="about.html">About</a></li>
-              <li><a href="services.html">Services</a></li>
+              <li class="dropdown">
+                  <a href="services.html" class="dropbtn">The Team, Partners & Services</a>
+                  <div class="dropdown-content">
+                      <a href="consultation-info.html">Personalized Health Consultation</a>
+                      <a href="detox-program.html">Detox Program</a>
+                      <a href="beyond74-program.html">Beyond 7.4 Program</a>
+                      <a href="health-awareness-course.html">Health Awareness Course</a>
+                      <a href="introduction-talks.html">Introduction Talks</a>
+                      <a href="dhanwantari-yog-training.html">Dhanwantari Yog Training</a>
+                  </div>
+              </li>
+              <li class="dropdown">
+                  <a href="about.html" class="dropbtn">About the Foundation & Training</a>
+                  <div class="dropdown-content">
+                      <a href="about-us-detail.html">Our Mission</a>
+                      <a href="our-philosophy.html">Our Philosophy</a>
+                      <a href="our-team.html">Our Team</a>
+                      <a href="a-to-z.html">A-Z of Health</a>
+                      <a href="1yr-training-course.html">1 Year Training Course</a>
+                  </div>
+              </li>
               <li><a href="resources.html">Resources</a></li>
               <li><a href="testimonials.html">Testimonials</a></li>
               <li><a href="contact.html">Contact</a></li>
@@ -17,4 +99,3 @@
           </ul>
       </nav>
   </header>
- 

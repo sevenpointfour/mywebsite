@@ -12,7 +12,7 @@ body {
 
 /* Header and Navigation */
 header {
-    background-color: #2cca49;
+    background-color: #007bff; /* Bright Blue */
     color: #fff;
     padding: 1rem 0;
     position: sticky;
@@ -107,8 +107,7 @@ header {
 
 .navbar-links li:hover,
 .navbar-links li.active {
-    background-color: #04581b;
-    /* Dark green background on hover/active */
+    background-color: #0056b3; /* Darker blue on hover/active */
     color: #ddd;
     /* Fainter text color on hover/active */
 }

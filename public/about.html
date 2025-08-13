@@ -7,6 +7,26 @@
      <!-- CKEditor script can remain if other pages use it, but it won't be initialized for #editor on this page -->
      <!-- <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script> -->
      <link rel="stylesheet" href="css/main_style.css">
+     <style>
+        /* Reduce card height and make title clickable */
+        .about-card-item, .service-item, .resource-item {
+            padding: 1rem; /* Further reduced padding */
+        }
+        .about-card-item h3 a, .service-item h3 a, .resource-item h3 a {
+            display: inline-block; /* Ensure border wraps content */
+            text-decoration: none;
+            color: inherit; /* Inherit color from h3 */
+            border: 3px solid #333; /* Dark border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 6px 12px; /* Padding inside the border */
+            transition: background-color 0.2s, color 0.2s; /* Smooth hover transition */
+        }
+        .about-card-item h3 a:hover, .service-item h3 a:hover, .resource-item h3 a:hover {
+            background-color: #333; /* Dark background on hover */
+            color: white; /* White text on hover */
+            text-decoration: none;
+        }
+    </style>
  </head>
  <body>
      <div id="navbar-placeholder"></div>
@@ -22,24 +42,24 @@
  
                  <div class="about-cards-container" style="margin-top: 30px;">
                      <div class="about-card-item card-green">
-                         <h3>Our Mission</h3>
+                         <h3><a href="about-us-detail.html">Our Mission</a></h3>
                          <p>To provide comprehensive and compassionate health guidance that inspires and enables individuals to achieve their highest potential for well-being.</p>
-                         <a href="about-us-detail.html" class="cta-button">Learn More</a>
                      </div>
                      <div class="about-card-item card-blue">
-                         <h3>Our Philosophy</h3>
+                         <h3><a href="our-philosophy.html">Our Philosophy</a></h3>
                          <p>We embrace a holistic view of health, integrating mind, body, and spirit to foster true wellness from within.</p>
-                         <a href="our-philosophy.html" class="cta-button">Discover Our Approach</a>
                      </div>
                      <div class="about-card-item card-yellow">
-                         <h3>Our Team</h3>
+                         <h3><a href="our-team.html">Our Team</a></h3>
                          <p>Meet our dedicated professionals who are passionate about helping you on your health journey.</p>
-                         <a href="our-team.html" class="cta-button">Meet the Team</a>
                      </div>
                      <div class="about-card-item card-brown">
-                         <h3>A-Z of Health</h3>
+                         <h3><a href="a-to-z.html">A-Z of Health</a></h3>
                          <p>Explore our comprehensive guide to various health topics and natural remedies.</p>
-                         <a href="a-to-z.html" class="cta-button">Explore A-Z</a>
+                     </div>
+                     <div class="about-card-item card-red">
+                         <h3><a href="1yr-training-course.html">1 Year Training Course</a></h3>
+                         <p>An intensive year-long training program for those looking to deepen their understanding and practice of health principles.</p>
                      </div>
                  </div>
              </section>
