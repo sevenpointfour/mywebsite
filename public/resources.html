@@ -7,6 +7,26 @@
      <!-- CKEditor script can remain if other pages use it, but it won't be initialized for #editor on this page -->
      <!-- <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script> -->
      <link rel="stylesheet" href="css/main_style.css">
+     <style>
+        /* Reduce card height and make title clickable */
+        .about-card-item, .service-item, .resource-item {
+            padding: 1rem; /* Further reduced padding */
+        }
+        .about-card-item h3 a, .service-item h3 a, .resource-item h3 a {
+            display: inline-block; /* Ensure border wraps content */
+            text-decoration: none;
+            color: inherit; /* Inherit color from h3 */
+            border: 2px solid #333; /* Thinner dark border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 6px 12px; /* Padding inside the border */
+            transition: background-color 0.2s, color 0.2s; /* Smooth hover transition */
+        }
+        .about-card-item h3 a:hover, .service-item h3 a:hover, .resource-item h3 a:hover {
+            background-color: #333; /* Dark background on hover */
+            color: white; /* White text on hover */
+            text-decoration: none;
+        }
+    </style>
  </head>
  <body>
      <div id="navbar-placeholder"></div>
@@ -21,20 +41,17 @@
  
                  <div class="about-cards-container" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; text-align: left;">
                      <div class="about-card-item card-blue"> <!-- Light grey -->
-                         <h3>Video Resources</h3>
+                         <h3><a href="all-video-resources.html">Video Resources</a></h3>
                          <p>Watch our latest videos on health tips, program introductions, and wellness guides.</p>
-                         <a href="all-video-resources.html" class="cta-button">View All Videos</a>
                      </div>
                      <div class="about-card-item card-green">
-                         <h3>Audio Resources</h3>
+                         <h3><a href="all-audio-resources.html">Audio Resources</a></h3>
                          <p>Listen to guided meditations, health talks, and inspiring audio content.</p>
-                         <a href="all-audio-resources.html" class="cta-button">View All Audios</a>
                      </div>
                      <div class="about-card-item card-yellow">
-                         <h3>Reading Materials</h3>
+                         <h3><a href="all-reading-materials.html">Reading Materials</a></h3>
                          <p>Browse articles, guides, and downloadable PDFs on various health topics.</p>
                          <!-- Link to a future all-reading-materials.html or a relevant section -->
-                         <a href="all-reading-materials.html" class="cta-button">Explore Articles</a> 
                      </div>
                  </div>
  
@@ -44,15 +61,13 @@
                  <div class="resource-grid" style="margin-top: 20px;">
                       <div class="resource-item">
                           <img src="images/placeholder-video.png" alt="Video Thumbnail">
-                          <h3>Understanding Your Body</h3>
+                          <h3><a href="#">Understanding Your Body</a></h3>
                           <p>A short description of a featured video.</p>
-                          <a href="#" class="cta-button">Watch Now</a>
                       </div>
                       <div class="resource-item">
                          <!-- Placeholder for an audio or article item -->
-                         <h3>Guided Meditation</h3>
+                         <h3><a href="#">Guided Meditation</a></h3>
                          <p>A quick link to a popular audio session.</p>
-                         <a href="#" class="cta-button">Listen Now</a>
                      </div>
                  </div>
   
