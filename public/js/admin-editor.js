@@ -12,7 +12,7 @@ function initializeAdminEditor() {
         document.querySelector('.content-html .page-title-section h1').textContent = pageNameForContent.replace(/-/g, ' ');
         document.head.title = pageNameForContent.replace(/-/g, ' ');
     }
-    const adminToken = localStorage.getItem('adminWebsiteToken');
+    const adminToken = localStorage.getItem('adminToken');
     const saveButton = document.getElementById('saveButton');
     const statusDiv = document.getElementById('status');
     let isReadOnly = !adminToken;
@@ -24,14 +24,48 @@ function initializeAdminEditor() {
                     headers: { 'Authorization': `Bearer ${adminToken}` }
                 });
                 const data = await response.json();
-                if (response.ok && data.isAdmin) {
-                    isReadOnly = false;
-                }
+                console.log('Admin verification response:', { ok: response.ok, data: data });
+                // Only set read-only if verification is successful and confirms isAdmin status
+                isReadOnly = !(response.ok && data.isAdmin);
             } catch (error) {
                 console.error('Admin verification failed:', error);
+                isReadOnly = true; // Revert to read-only if verification fails
             }
         }
 
+        // Initialize editor or readonly view AFTER admin check
+        if (isReadOnly) {
+            // Hide editor and show readonly content
+            const editorEl = document.querySelector('textarea#editor');
+            if (editorEl) {
+                editorEl.style.display = 'none';
+                let contentDiv = document.createElement('div');
+                contentDiv.classList.add('readonly-content');
+                const response = await fetch(`/api/page-content/${pageNameForContent}`);
+                if (!response.ok) throw new Error(`Failed to load content. Status: ${response.status}`);
+                const data = await response.json();
+                contentDiv.innerHTML = getContent(data);
+                contentDiv.style.display = 'block';
+                contentDiv.classList.add('readonly-content');
+                editorEl.parentNode.insertBefore(contentDiv, editorEl);
+            }
+        } else {
+            // Initialize the full editor for admins
+            initializeEditor();
+        }
+
+        // Show/hide save button based on final admin status
+        if (saveButton) {
+            if (isReadOnly) {
+                saveButton.style.display = 'none';
+            } else {
+                saveButton.style.display = 'block';
+            }
+        }
+    }
+
+    function initializeEditor() {
+        // This function now contains the tinymce.init call
         if (saveButton) {
             const buttonContainer = document.createElement('div');
             buttonContainer.classList.add('admin-button-container');
@@ -52,7 +86,7 @@ function initializeAdminEditor() {
                 buttonContainer.appendChild(downloadButton);
 
                 downloadButton.addEventListener('click', async () => {
-                    const token = localStorage.getItem('adminWebsiteToken');
+                    const token = localStorage.getItem('adminToken');
                     if (!token) {
                         alert('You must be logged in to download content.');
                         return;
@@ -91,65 +125,47 @@ function initializeAdminEditor() {
                 });
             }
         }
-
-        if (isReadOnly) {
-            // Extract local variable for the editorEl
-            const editorEl = document.querySelector('textarea#editor');
-            if (editorEl) {
-                editorEl.style.display = 'none';
-                let contentDiv = document.createElement('div');
-                contentDiv.classList.add('readonly-content');
-                const response = await fetch(`/api/page-content/${pageNameForContent}`);
-                if (!response.ok) throw new Error(`Failed to load content. Status: ${response.status}`);
-                const data = await response.json();
-                contentDiv.innerHTML = getContent(data);
-                contentDiv.style.display = 'block';
-                contentDiv.classList.add('readonly-content'); // Add a class for styling if needed
-                editorEl.parentNode.insertBefore(contentDiv, editorEl);
+        tinymce.init({
+            selector: 'textarea#editor',
+            readonly: false, // Always editable when this function is called
+            plugins: 'code table lists image link media wordcount help',
+            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table | image link media | help',
+            license_key: 'gpl',
+            menubar: true,
+            height: 500,
+            content_css: '/css/main_style.css?v=1.2',
+            images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open('POST', '/api/admin/upload-image');
+                const token = localStorage.getItem('adminToken');
+                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+                xhr.onload = () => {
+                    if (xhr.status < 200 || xhr.status >= 300) {
+                        reject('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+                    const json = JSON.parse(xhr.responseText);
+                    if (!json || typeof json.location != 'string') {
+                        reject('Invalid JSON: ' + xhr.responseText);
+                        return;
+                    }
+                    resolve(json.location);
+                };
+                xhr.onerror = () => {
+                    reject('Image upload failed due to a network error. Please try again.');
+                };
+                const formData = new FormData();
+                formData.append('folder', '_editor');
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+                xhr.send(formData);
+            }),
+            setup: function (editor) {
+                editor.on('init', function () {
+                    loadContent();
+                });
             }
-        } else {
-            tinymce.init({
-                selector: 'textarea#editor',
-                readonly: isReadOnly,
-                plugins: 'code table lists image link media wordcount help',
-                toolbar: isReadOnly ? false : 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table | image link media | help',
-                menubar: !isReadOnly,
-                height: 500,
-                // This is the crucial line: It tells the editor to use your main stylesheet.
-                content_css: '/css/main_style.css?v=1.2',
-                images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
-                    const xhr = new XMLHttpRequest();
-                    xhr.withCredentials = false;
-                    xhr.open('POST', '/api/admin/upload-image');
-                    const token = localStorage.getItem('adminWebsiteToken');
-                    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-                    xhr.onload = () => {
-                        if (xhr.status < 200 || xhr.status >= 300) {
-                            reject('HTTP Error: ' + xhr.status);
-                            return;
-                        }
-                        const json = JSON.parse(xhr.responseText);
-                        if (!json || typeof json.location != 'string') {
-                            reject('Invalid JSON: ' + xhr.responseText);
-                            return;
-                        }
-                        resolve(json.location);
-                    };
-                    xhr.onerror = () => {
-                        reject('Image upload failed due to a network error. Please try again.');
-                    };
-                    const formData = new FormData();
-                    formData.append('folder', '_editor'); // Add the folder parameter
-                    formData.append('file', blobInfo.blob(), blobInfo.filename());
-                    xhr.send(formData);
-                }),
-                setup: function (editor) {
-                    editor.on('init', function () {
-                        loadContent();
-                    });
-                }
-            });
-        }
+        });
     }
 
     async function loadContent() {
@@ -182,7 +198,7 @@ function initializeAdminEditor() {
                 }
             }
             const content = tinymce.get('editor').getContent().split("\n");
-            const token = localStorage.getItem('adminWebsiteToken');
+            const token = localStorage.getItem('adminToken');
             if (!token) {
                 alert('You must be logged in to save content.');
                 if (statusDiv) statusDiv.textContent = 'Error: Not logged in.';
