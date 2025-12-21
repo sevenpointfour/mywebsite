@@ -1,0 +1,61 @@
+Nutri-manasi@gmail.com; 123456 <br>
+Execu-vidya@gmail.com; 123456
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Login</title>
+    <link rel="stylesheet" href="style.css"> <!-- Reusing the main stylesheet -->
+</head>
+<body>
+    <div class="container">
+        <h1>Staff Login</h1>
+        <form id="staffLoginForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="submit-btn">Login</button>
+        </form>
+        <div id="message" class="message-area"></div>
+    </div>
+
+    <script>
+        document.getElementById('staffLoginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('message');
+
+            messageDiv.textContent = 'Processing...';
+            messageDiv.className = 'message-area info';
+
+            try {
+                const response = await fetch('/api/staff/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('staffToken', result.token); // Store the token
+                    // Redirect based on role from the response
+                    window.location.href = result.role === 'nutritionist' ? '/nutritionist-dashboard.html' : '/executive-dashboard.html';
+                } else {
+                    messageDiv.textContent = 'Error: ' + (result.error || 'Login failed.');
+                    messageDiv.className = 'message-area error';
+                }
+            } catch (error) {
+                messageDiv.textContent = 'An error occurred. Please try again.';
+                messageDiv.className = 'message-area error';
+            }
+        });
+    </script>
+</body>
+</html>

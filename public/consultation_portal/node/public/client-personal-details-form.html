@@ -1,0 +1,498 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Client Personal Details</title>
+     <style>
+                /* Navbar Styles */
+        .main-navbar {
+            background-color: #333;
+            overflow: hidden;
+            margin-bottom: 20px; /* Add some space below the navbar */
+        }
+        .main-navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .main-navbar li {
+            display: inline-block; /* Display items in a line */
+        }
+        .main-navbar li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .main-navbar li a:hover {
+            background-color: #555;
+        }
+        .main-navbar li a.active { /* Style for the active page link */
+            background-color: #007bff;
+        }
+        /* Style for logout button in navbar */
+        .main-navbar li a#logoutButton {
+            background-color: #dc3545; /* Red color for logout */
+            margin-left: 10px; /* Optional: add some space if it's the last item */
+            border-radius: 4px; /* Optional: slightly rounded corners */
+        }
+        .main-navbar li a#logoutButton:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+         body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; color: #333; }
+         .container { max-width: 800px; margin: auto; background-color: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 15px rgba(0,0,0,0.1); }
+         h1 { color: #0056b3; text-align: center; margin-bottom: 30px; }
+         .form-grid {
+             display: grid;
+             grid-template-columns: 1fr; /* Default to single column */
+             gap: 25px; /* Increased gap slightly */
+         }
+ 
+         @media (min-width: 768px) { /* Apply two columns for screens wider than 768px */
+             .form-grid {
+                 grid-template-columns: 1fr 1fr; /* Explicitly two equal columns */
+             }
+         }
+ 
+         .form-group {
+             display: flex;
+             flex-direction: column;
+             /* background-color: #fdfdfd; Optional: subtle background for each group */
+             /* border: 1px solid #efefef;  Optional: subtle border for each group */
+             /* padding: 15px; Optional: padding if background/border is added */
+             /* border-radius: 4px; Optional: if background/border is added */
+         }
+         .form-group label {
+             font-weight: bold;
+             color: #4a5568; /* Slightly softer label color */
+             margin-bottom: 8px;
+         }
+         .form-group input[type="text"],
+         .form-group input[type="email"],
+         .form-group input[type="tel"],
+         .form-group input[type="number"],
+         .form-group input[type="date"],
+         .form-group select,
+         .form-group textarea {
+             width: 100%;
+             padding: 10px;
+             border: 1px solid #ccc;
+             border-radius: 4px;
+             box-sizing: border-box;
+             font-size: 15px; /* Slightly larger font in inputs */
+         }
+         .form-group textarea {
+             resize: vertical;
+             min-height: 80px;
+         }
+         .form-actions { text-align: center; margin-top: 30px; }
+         button[type="submit"] {
+             background-color: #007bff;
+             /* background-image: linear-gradient(to bottom, #007bff, #0069d9); Optional: gradient */
+             color: white;
+             padding: 12px 30px;
+             border: none;
+             border-radius: 5px;
+             cursor: pointer;
+             font-size: 16px;
+             transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+         }
+         button[type="submit"]:hover {
+             background-color: #0069d9; /* Darker shade on hover */
+         }
+         #formMessage { margin-top: 20px; padding: 10px; border-radius: 4px; text-align: center; }
+         .success-message { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+         .error-message { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+     </style>
+ </head>
+ <body>
+    <nav class="main-navbar">
+    <ul>
+        <li><a href="client-personal-details-form.html" class="active">Personal Details</a></li>
+        <li><a href="client-blood-tests-form.html">Blood Tests</a></li>
+        <li><a href="client-food-plan.html">Food Plan</a></li>
+        <li><a href="client-medical-history-form.html">Medical History</a></li>
+        <li><a href="#" id="logoutButton">Logout</a></li>
+    </ul>
+</nav>
+
+     <div class="container">
+         <h1>Client Personal Details</h1>
+ 
+         <form id="personalDetailsForm">
+             <div class="form-grid">
+                 <div class="form-group">
+                     <label for="firstName">First Name:</label>
+                     <input type="text" id="firstName" name="first_name" required>
+                 </div>
+                 <div class="form-group">
+                     <label for="height">Height (cms):</label>
+                     <input type="number" id="height" name="height_cms" step="0.1" placeholder="e.g., 170.5">
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="lastName">Last Name:</label>
+                     <input type="text" id="lastName" name="last_name" required>
+                 </div>
+                 <div class="form-group">
+                     <label for="weight">Weight (kg):</label>
+                     <input type="number" id="weight" name="weight_kg" step="0.1" placeholder="e.g., 65.5">
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="address1">Address 1:</label>
+                     <input type="text" id="address1" name="address_1">
+                 </div>
+                  <div class="form-group">
+                     <label for="age">Age (Completed Years):</label>
+                     <input type="number" id="age" name="age_years" min="0">
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="address2">Address 2:</label>
+                     <input type="text" id="address2" name="address_2">
+                 </div>
+                 <div class="form-group">
+                     <label for="gender">Male / Female:</label>
+                     <select id="gender" name="gender">
+                         <option value="">-- Select --</option>
+                         <option value="Male">Male</option>
+                         <option value="Female">Female</option>
+                         <option value="Other">Other</option>
+                     </select>
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="address3">Address 3:</label>
+                     <input type="text" id="address3" name="address_3">
+                 </div>
+                 <div class="form-group">
+                     <label for="maritalStatus">Single / Married:</label>
+                     <select id="maritalStatus" name="marital_status">
+                         <option value="">-- Select --</option>
+                         <option value="Single">Single</option>
+                         <option value="Married">Married</option>
+                         <option value="Divorced">Divorced</option>
+                         <option value="Widowed">Widowed</option>
+                         <option value="Prefer not to say">Prefer not to say</option>
+                     </select>
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="city">City:</label>
+                     <input type="text" id="city" name="city">
+                 </div>
+                 <div class="form-group">
+                     <label for="shiftDuty">Shift Duty (Yes/No):</label>
+                     <select id="shiftDuty" name="shift_duty">
+                         <option value="No">No</option>
+                         <option value="Yes">Yes</option>
+                     </select>
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="pincode">Pincode:</label>
+                     <input type="text" id="pincode" name="pincode" pattern="\d{6}" title="Enter a 6-digit pincode">
+                 </div>
+                 <div class="form-group">
+                     <label for="jointFamily">Joint Family (Yes/No):</label>
+                     <select id="jointFamily" name="joint_family">
+                         <option value="No">No</option>
+                         <option value="Yes">Yes</option>
+                     </select>
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="mobile">Mobile:</label>
+                     <input type="tel" id="mobile" name="mobile_number" pattern="\d{10,15}" title="Enter a valid mobile number">
+                 </div>
+                  <div class="form-group">
+                     <label for="vegetarian">Vegetarian (Yes/No):</label>
+                     <select id="vegetarian" name="is_vegetarian">
+                         <option value="No">No</option>
+                         <option value="Yes">Yes</option>
+                     </select>
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="email">Email:</label>
+                     <input type="email" id="email" name="email" required>
+                 </div>
+                 <div class="form-group">
+                     <label for="nonVegetarian">Non Vegetarian (Yes/No):</label>
+                     <select id="nonVegetarian" name="is_non_vegetarian">
+                         <option value="No">No</option>
+                         <option value="Yes">Yes</option>
+                     </select>
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="dateOfPayment">Date of Payment:</label>
+                     <input type="date" id="dateOfPayment" name="date_of_payment">
+                 </div>
+                 <div class="form-group">
+                     <label for="vegan">Vegan (Yes/No):</label>
+                     <select id="vegan" name="is_vegan">
+                         <option value="No">No</option>
+                         <option value="Yes">Yes</option>
+                     </select>
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="reference">Reference:</label>
+                     <input type="text" id="reference" name="reference_source">
+                 </div>
+                 <div class="form-group">
+                     <label for="jain">Jain (Yes/No):</label>
+                     <select id="jain" name="is_jain">
+                         <option value="No">No</option>
+                         <option value="Yes">Yes</option>
+                     </select>
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="healthExecutive">Health Executive:</label>
+                     <select id="healthExecutive" name="health_executive_id">
+                         <option value="Madhav Joshi">Madhav Joshi</option>
+                         <!-- Add other executives here if needed, e.g., <option value="executive_id_2">Another Exec</option> -->
+                     </select>
+                 </div>
+                 <div class="form-group">
+                     <label for="lactoseIntolerance">Lactose Intolerance (Yes/No):</label>
+                     <select id="lactoseIntolerance" name="has_lactose_intolerance">
+                         <option value="No">No</option>
+                         <option value="Yes">Yes</option>
+                     </select>
+                 </div>
+
+                 <!-- New Fields Start Here -->
+                 <div class="form-group" style="grid-column: 1 / -1;"> <!-- Spans full width -->
+                     <label for="healthIssues">Health Issues:</label>
+                     <textarea id="healthIssues" name="health_issues" placeholder="Describe any health issues..."></textarea>
+                 </div>
+ 
+                 <div class="form-group" style="grid-column: 1 / -1;"> <!-- Spans full width -->
+                     <label for="foodLiking">Food Liking:</label>
+                     <textarea id="foodLiking" name="food_liking" placeholder="List preferred foods..."></textarea>
+                 </div>
+ 
+                 <div class="form-group" style="grid-column: 1 / -1;"> <!-- Spans full width -->
+                     <label for="foodDisliking">Food Disliking:</label>
+                     <textarea id="foodDisliking" name="food_disliking" placeholder="List disliked foods..."></textarea>
+                 </div>
+ 
+                 <div class="form-group" style="grid-column: 1 / -1;"> <!-- Spans full width -->
+                     <label for="jobDescription">Job Description:</label>
+                     <textarea id="jobDescription" name="job_description" placeholder="Describe job responsibilities..."></textarea>
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="jobTimings">Job Timings:</label>
+                     <input type="text" id="jobTimings" name="job_timings" placeholder="e.g., 9 am to 5 pm">
+                 </div>
+ 
+                 <div class="form-group">
+                     <label for="sedentaryStatus">Sedentary Status:</label>
+                     <select id="sedentaryStatus" name="sedentary_status">
+                         <option value="">-- Select --</option>
+                         <option value="Yes">Yes</option>
+                         <option value="No">No</option>
+                         <option value="Partly">Partly</option>
+                     </select>
+                 </div>
+                  <div class="form-group">
+                     <label for="travellingFrequency">Travelling Frequency:</label>
+                     <select id="travellingFrequency" name="travelling_frequency">
+                         <option value="">-- Select --</option>
+                         <option value="No">No</option>
+                         <option value="Sometimes">Sometimes</option>
+                         <option value="Extensively">Extensively</option>
+                     </select>
+                 </div>
+                 <!-- New Fields End Here -->
+             </div>
+ 
+             <div class="form-actions">
+                 <button type="submit">Save Personal Details</button>
+             </div>
+         </form>
+         <div id="formMessage"></div>
+     </div>
+ 
+     <script>
+        // Logout functionality
+        const logoutButton = document.getElementById('logoutButton');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                localStorage.removeItem('clientToken');
+                window.location.href = '/client-login.html';
+            });
+        }
+
+        // Get form and button elements once
+        const personalDetailsFormElement = document.getElementById('personalDetailsForm');
+        const savePersonalDetailsBtn = personalDetailsFormElement.querySelector('button[type="submit"]');
+
+        // Function to fetch and pre-fill existing client details
+        async function fetchAndPopulateClientDetails() {
+            const token = localStorage.getItem('clientToken');
+            if (!token) {
+                // Handle not logged in, perhaps redirect to login
+                document.getElementById('formMessage').textContent = 'Error: You are not logged in.';
+                document.getElementById('formMessage').className = 'error-message';
+                return;
+            }
+
+            // First, check medical history finalization status
+            try {
+                const medHistoryResponse = await fetch('/api/client/medical-history/latest', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const medHistoryData = await medHistoryResponse.json();
+
+                if (medHistoryResponse.ok && medHistoryData.is_finalized) {
+                    setPersonalDetailsFormReadOnly(true);
+                    document.getElementById('formMessage').textContent = 'Your profile has been finalized and cannot be edited. Please contact support if changes are needed.';
+                    document.getElementById('formMessage').className = 'info-message';
+                    // If finalized, we might still want to load the data for viewing, so we continue.
+                }
+            } catch (error) {
+                console.warn('Could not check medical history finalization status:', error);
+            }
+
+            try {
+                const response = await fetch('/api/client/me/personal-details', { // New GET endpoint needed
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!response.ok) {
+                    const errorResult = await response.json().catch(() => ({ error: 'Failed to load your details.' }));
+                    throw new Error(errorResult.error || `HTTP error! status: ${response.status}`);
+                }
+                const clientData = await response.json();
+                // Populate the form fields
+                for (const key in clientData) {
+                    if (clientData.hasOwnProperty(key) && personalDetailsFormElement.elements[key]) {                        
+                        if (key === 'date_of_payment' && clientData[key]) {
+                            try {
+                                const dateValue = new Date(clientData[key]);
+                                if (!isNaN(dateValue.getTime())) { // Check if date is valid
+                                    const year = dateValue.getFullYear();
+                                    const month = String(dateValue.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+                                    const day = String(dateValue.getDate()).padStart(2, '0');
+                                    personalDetailsFormElement.elements[key].value = `${year}-${month}-${day}`;
+                                } else {
+                                    personalDetailsFormElement.elements[key].value = ''; // Set to empty if date is invalid
+                                }
+                            } catch (e) {
+                                console.error("Error formatting date for key:", key, clientData[key], e);
+                                personalDetailsFormElement.elements[key].value = ''; // Fallback
+                            }
+                        } else {
+                            personalDetailsFormElement.elements[key].value = clientData[key] === null ? '' : clientData[key];
+                        }
+                    }
+                }
+                // If not finalized, show data loaded message (if not already showing finalized message)
+                if (!document.getElementById('formMessage').textContent.includes('finalized')) {
+                    document.getElementById('formMessage').textContent = 'Your details have been loaded.';
+                    document.getElementById('formMessage').className = 'info-message';
+                }
+            } catch (error) {
+                document.getElementById('formMessage').textContent = 'Error loading details: ' + error.message;
+                document.getElementById('formMessage').className = 'error-message';
+            }
+        }
+
+        function setPersonalDetailsFormReadOnly(isReadOnly) {
+            const formElements = personalDetailsFormElement.elements;
+            for (let i = 0; i < formElements.length; i++) {
+                // Don't disable the logout button if it were part of this form
+                if (formElements[i].type !== 'button' || formElements[i].id !== 'logoutButton') {
+                     formElements[i].disabled = isReadOnly;
+                }
+            }
+            // The submit button is part of formElements, so it's handled above.
+            // If you had other specific buttons outside the formElements collection, handle them here.
+        }
+         document.getElementById('personalDetailsForm').addEventListener('submit', async function(event) {
+            // When form is submitted, we assume changes will be saved or an error handled.
+             event.preventDefault();
+             const formMessage = document.getElementById('formMessage');
+             formMessage.textContent = '';
+             formMessage.className = ''; // Clear previous message styling
+ 
+             const formData = new FormData(this);
+             const data = Object.fromEntries(formData.entries());
+ 
+             console.log('Form data to be submitted:', data);
+ 
+            const token = localStorage.getItem('clientToken');
+            if (!token) {
+                formMessage.textContent = 'Error: Authentication token not found. Please log in again.';
+                formMessage.className = 'error-message';
+                return;
+            }
+ 
+             try {
+                const response = await fetch('/api/client/personal-details', {
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+ 
+                if (!response.ok) {
+                    const errorResult = await response.json().catch(() => ({ error: 'Failed to save details. Server error.' }));
+                    throw new Error(errorResult.error || `HTTP error! status: ${response.status}`);
+                }
+ 
+                const result = await response.json();
+                formMessage.textContent = result.message || 'Personal details saved successfully!';
+                hasUnsavedChanges = false; // Reset flag on successful save
+                 formMessage.className = 'success-message';
+                 // this.reset(); // Uncomment to reset form on success
+ 
+             } catch (error) {
+                 formMessage.textContent = 'Error: ' + error.message;
+                 formMessage.className = 'error-message';
+                 console.error('Submission error:', error);
+             }
+         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAndPopulateClientDetails(); // Call this to load existing data
+            // Note: The health_executive_id and nutritionist_id might need special handling if they are select dropdowns populated from an API.
+        });
+        let hasUnsavedChanges = false;
+        // const form = document.getElementById('personalDetailsForm'); // Already defined as personalDetailsFormElement
+
+        personalDetailsFormElement.addEventListener('input', (event) => {
+            input.addEventListener('input', () => { // 'input' for text fields, 'change' for select/checkbox/radio
+                hasUnsavedChanges = true;
+            });
+            if (input.tagName === 'SELECT') {
+                input.addEventListener('change', () => {
+                    hasUnsavedChanges = true;
+                });
+            }
+        });
+
+        window.addEventListener('beforeunload', function (e) {
+            if (hasUnsavedChanges) {
+                // Standard way to trigger the browser's own confirmation dialog
+                e.preventDefault(); // For some older browsers
+                e.returnValue = 'You have unsaved changes. Are you sure you want to leave?'; // Standard message
+                return 'You have unsaved changes. Are you sure you want to leave?'; // For some other browsers
+            }
+        });
+     </script>
+ </body>
+ </html>
+ 
