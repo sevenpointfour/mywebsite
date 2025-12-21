@@ -56,6 +56,18 @@ const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
 
 // In-memory store for OTPs. For production, consider a more persistent store like Redis.
 const otpStore = {};
+// Define environment-specific URLs based on the folder path.
+const currentDir = __dirname.toLowerCase();
+let REGISTER_LINK;
+
+if (currentDir.includes('staging_mywebsite')) {
+    REGISTER_LINK = 'https://staging.myconsultation.sevenpointfour.in/register.html';
+} else if (currentDir.includes('mywebsite')) {
+    REGISTER_LINK = 'https://myconsultation.sevenpointfour.in/register.html';
+} else {
+    REGISTER_LINK = 'http://localhost:3020/register.html';
+}
+ 
 
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
@@ -113,7 +125,9 @@ app.get('/api/page-content/:pageName', async (req, res) => {
     const filePath = path.join(contentDir, `${pageName}.json`);
 
     try {
-        const data = await fs.readFile(filePath, 'utf8');
+        let data = await fs.readFile(filePath, 'utf8');
+        // Replace any placeholders with environment-specific values
+        data = data.replace(/{{REGISTER_LINK}}/g, REGISTER_LINK);
         res.json(JSON.parse(data));
     } catch (error) {
         if (error.code === 'ENOENT') {
