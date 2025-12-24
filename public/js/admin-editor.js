@@ -25,10 +25,17 @@ function initializeAdminEditor() {
                 });
                 const data = await response.json();
                 if (response.ok && data.isAdmin) {
-                    isReadOnly = false;
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        isReadOnly = false;
+                    } else {
+                        isReadOnly = true;
+                    }
+                } else {
+                    isReadOnly = true;
                 }
             } catch (error) {
                 console.error('Admin verification failed:', error);
+                isReadOnly = true;
             }
         }
 
