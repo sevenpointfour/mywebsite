@@ -194,6 +194,9 @@ app.delete('/api/page-content/:pageName', verifyAdmin, async (req, res) => {
         await fs.unlink(filePath);
         res.json({ success: true, message: `Content for ${pageName} deleted successfully.` });
     } catch (error) {
+        if (error.code === 'ENOENT') {
+            return res.status(404).json({ error: 'Content not found.' });
+        }
         console.error(`Error deleting content for ${pageName}:`, error);
         res.status(500).json({ error: 'Failed to delete content.' });
     }
