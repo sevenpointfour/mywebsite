@@ -415,7 +415,19 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-    console.log(`Serving static files from: ${path.join(__dirname, 'public')}`);
-});
+async function startServer() {
+    // Automatically create symbolic link for safe photos on server
+    if (currentDir.includes('staging_mywebsite') || currentDir.includes('mywebsite')) {
+        try {
+            await fs.symlink('../../../safe_uploads/photos', path.join(__dirname, 'public', 'photos'), 'dir');
+            console.log('SERVER: Safe photos link created.');
+        } catch (error) {
+            if (error.code !== 'EEXIST') console.error('SERVER: Symlink check:', error.message);
+        }
+    }
+    app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
+        console.log(`Serving static files from: ${path.join(__dirname, 'public')}`);
+    });
+}
+startServer();
