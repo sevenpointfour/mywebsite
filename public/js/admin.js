@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                localStorage.setItem('adminWebsiteToken', data.token);
+                localStorage.setItem('adminToken', data.token);
                 showMessage('Login successful! Redirecting...', 'success');
                 window.location.href = '/index.html'; // Redirect to your main admin dashboard
             } else {

@@ -9,7 +9,7 @@ let slides;
 let autoSlideInterval;
 
 function isAdmin() {
-    return !!localStorage.getItem('adminWebsiteToken');
+    return !!localStorage.getItem('adminToken');
 }
 
 function showSlides(isAutoSlide = false) {
@@ -64,7 +64,7 @@ async function deleteImage(imagePath) {
         return;
     }
 
-    const token = localStorage.getItem('adminWebsiteToken');
+    const token = localStorage.getItem('adminToken');
     try {
         const response = await fetch(`/api/images/${imagePath}`, {
             method: 'DELETE',
@@ -327,7 +327,7 @@ async function uploadFile(file) {
     formData.append('folder', currentFolder);
     formData.append('file', file);
 
-    const token = localStorage.getItem('adminWebsiteToken');
+    const token = localStorage.getItem('adminToken');
     try {
         const response = await fetch('/api/admin/upload-image', {
             method: 'POST',

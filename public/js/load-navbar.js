@@ -58,27 +58,32 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
 
         // isadmin?
-        const adminToken = localStorage.getItem('adminWebsiteToken');
+        const adminToken = localStorage.getItem('adminToken');
         if (adminToken) {
+            // Optimistically add admin links if a token exists
+            const adminLink = document.createElement('li');
+            adminLink.classList.add('nav-item');
+            adminLink.innerHTML = `<a class="nav-link" href="/new-page.html">New Page</a>`;
+            navbarPlaceholder.querySelector('.navbar-links').appendChild(adminLink);
+
+            const logoutListItem = document.createElement('li');
+            logoutListItem.innerHTML = `<a href="#">Logout</a>`;
+            logoutListItem.querySelector('a').addEventListener('click', (event) => {
+                event.preventDefault();
+                localStorage.removeItem('adminToken');
+                window.location.href = '/admin.html';
+            });
+            navbarPlaceholder.querySelector('.navbar-links').appendChild(logoutListItem);
+
+            // Verify token in the background
             let verify = await fetch('/api/admin/verify', {
                 headers: { 'Authorization': `Bearer ${adminToken}` }
             }).then(response => response.json());
-            if (verify.isAdmin) {
-                const adminLink = document.createElement('li');
-                adminLink.classList.add('nav-item');
-                adminLink.innerHTML = `<a class="nav-link" href="/new-page.html">New Page</a>`;
-                navbarPlaceholder.querySelector('.navbar-links').appendChild(adminLink);
-
-                // Create and add a new Logout button
-                const logoutListItem = document.createElement('li');
-                logoutListItem.innerHTML = `<a href="#">Logout</a>`;
-                logoutListItem.querySelector('a').addEventListener('click', (event) => {
-                    event.preventDefault();
-                    localStorage.removeItem('adminWebsiteToken');
-                    // Redirect to the admin login page
-                    window.location.href = '/admin.html';
-                });
-                navbarPlaceholder.querySelector('.navbar-links').appendChild(logoutListItem);
+            console.log('Navbar admin verification response:', verify);
+            if (!verify.isAdmin) {
+                // If verification fails, remove the admin links
+                adminLink.remove();
+                logoutListItem.remove();
             }
         }
 
