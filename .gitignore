@@ -4,3 +4,4 @@ dist
 public/photos
 content/
 public/audio/
+tmp/
