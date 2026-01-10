@@ -12,7 +12,7 @@ body {
 
 /* Header and Navigation */
 header {
-    background-color: #654321; /* Dark Brown */
+    background-color: gray; /* Gray */
     color: #fff;
     padding: 1rem 0;
     position: sticky;
