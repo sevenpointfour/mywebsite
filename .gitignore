@@ -5,3 +5,4 @@ public/photos
 content/
 public/audio/
 tmp/
+stderr.log

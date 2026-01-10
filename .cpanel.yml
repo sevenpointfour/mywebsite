@@ -1,2 +1,6 @@
 ---
 deployment:
+  tasks:
+    - export DEPLOYPATH=/home3/sevenpoi/nodeapps/staging_mywebsite
+    - /bin/mkdir -p $DEPLOYPATH/tmp
+    - /bin/touch $DEPLOYPATH/tmp/restart.txt
