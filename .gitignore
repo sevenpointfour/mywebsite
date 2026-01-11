@@ -6,3 +6,4 @@ content/
 public/audio/
 tmp/
 stderr.log
+raw_client_data/
