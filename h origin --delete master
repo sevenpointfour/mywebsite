@@ -1,8 +1,0 @@
-* [32mdevelopment               [m a1ac7aa [[34morigin/development[m] Update .gitignore to include raw_client_data
-  production                [m a1ac7aa [[34morigin/production[m] Update .gitignore to include raw_client_data
-  staging                   [m a1ac7aa [[34morigin/staging[m] Update .gitignore to include raw_client_data
-  [31mremotes/origin/HEAD       [m -> origin/development
-  [31mremotes/origin/development[m a1ac7aa Update .gitignore to include raw_client_data
-  [31mremotes/origin/master     [m e927f5a Update .gitignore to exclude tmp directory
-  [31mremotes/origin/production [m a1ac7aa Update .gitignore to include raw_client_data
-  [31mremotes/origin/staging    [m a1ac7aa Update .gitignore to include raw_client_data
