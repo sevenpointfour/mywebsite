@@ -66,6 +66,42 @@ document.addEventListener("DOMContentLoaded", async function () {
             adminLink.innerHTML = `<a class="nav-link" href="/new-page.html">New Page</a>`;
             navbarPlaceholder.querySelector('.navbar-links').appendChild(adminLink);
 
+            // Backup Button
+            const backupListItem = document.createElement('li');
+            backupListItem.classList.add('nav-item');
+            backupListItem.innerHTML = `<a class="nav-link" href="#">Backup</a>`;
+            backupListItem.querySelector('a').addEventListener('click', async (e) => {
+                e.preventDefault();
+                if (!confirm('Are you sure you want to download a full content and public backup?')) return;
+                const token = localStorage.getItem('adminToken');
+                if (!token) return;
+                try {
+                    const response = await fetch('/api/admin/download-content', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        const now = new Date();
+                        const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+                        a.download = `content_backup_${timestamp}.zip`;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                        alert('Content backup downloaded successfully!');
+                    } else {
+                        alert('Failed to download backup.');
+                    }
+                } catch (error) {
+                    console.error('Backup error:', error);
+                    alert('Error downloading backup.');
+                }
+            });
+            navbarPlaceholder.querySelector('.navbar-links').appendChild(backupListItem);
+
             const logoutListItem = document.createElement('li');
             logoutListItem.innerHTML = `<a href="#">Logout</a>`;
             logoutListItem.querySelector('a').addEventListener('click', (event) => {
