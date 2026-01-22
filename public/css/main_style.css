@@ -14,7 +14,7 @@ body {
 header {
     background-color: blue;
     color: #fff;
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -54,7 +54,7 @@ header {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    padding: 10px;
+    padding: 0 10px;
     font-size: larger;
     display: none;
 }
