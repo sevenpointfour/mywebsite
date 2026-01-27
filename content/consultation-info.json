@@ -21,6 +21,6 @@
     "<p><strong>Step 8</strong> &ndash; Please read carefully &ldquo;Philosophy and Tips for Theme 7.4&rdquo; pages . This will help you to understand and implement suggested food structure. To discuss doubts , clarifications etc&nbsp; we will meet on zoom / in person as the case may be.</p>",
     "<h3>Ready to Start?</h3>",
     "<p>Register now to begin your personalized health journey with us.</p>",
-    "<p style=\"text-align: center;\"><a class=\"cta-button cta-blue\" href=\"http://localhost:3020/register.html\">Register for Consultation</a></p>"
+    "<p style=\"text-align: center;\"><a class=\"cta-button cta-blue\" href=\"{{REGISTER_LINK}}\">Register for Consultation</a></p>"
   ]
 }
