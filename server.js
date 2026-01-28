@@ -57,18 +57,17 @@ const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
 // In-memory store for OTPs. For production, consider a more persistent store like Redis.
 const otpStore = {};
 // Define environment-specific URLs based on the folder path.
-const currentDir = __dirname.toLowerCase();
 let REGISTER_LINK;
 let LOGIN_LINK;
 let TRAINING_REGISTER_LINK;
 let TRAINING_COURSES_LINK;
 
-if (currentDir.includes('staging')) {
+if (process.env.NODE_ENV === 'staging') {
     REGISTER_LINK = 'https://staging.training.arogyanubhutifoundation.in/register';
     LOGIN_LINK = 'https://staging.myconsultation.sevenpointfour.in/login.html';
     TRAINING_REGISTER_LINK = 'https://staging.training.arogyanubhutifoundation.in/register';
     TRAINING_COURSES_LINK = 'https://staging.training.arogyanubhutifoundation.in/courses';
-} else if (currentDir.includes('mywebsite')) {
+} else if (process.env.NODE_ENV === 'production') {
     REGISTER_LINK = 'https://training.arogyanubhutifoundation.in/register';
     LOGIN_LINK = 'https://myconsultation.sevenpointfour.in/login.html';
     TRAINING_REGISTER_LINK = 'https://training.arogyanubhutifoundation.in/register';
@@ -433,7 +432,7 @@ app.get('*', (req, res) => {
 
 async function startServer() {
     // Automatically create symbolic link for safe photos on server
-    if (currentDir.includes('staging_mywebsite') || currentDir.includes('mywebsite')) {
+    if (process.env.NODE_ENV === 'staging' || process.env.NODE_ENV === 'production') {
         try {
             await fs.symlink('../../../safe_uploads/photos', path.join(__dirname, 'public', 'photos'), 'dir');
             console.log('SERVER: Safe photos link created.');
