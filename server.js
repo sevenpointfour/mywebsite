@@ -418,6 +418,11 @@ app.get('/ping', (req, res) => {
     res.send('pong');
 });
 
+app.get('/kill-server', (req, res) => {
+    res.send('Server is restarting... Please wait 10 seconds and refresh the site.');
+    process.exit(1);
+});
+
 // Fallback for client-side routing
 app.get('*', (req, res) => {
     if (path.extname(req.path).length > 0) {
