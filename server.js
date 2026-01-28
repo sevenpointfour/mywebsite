@@ -143,7 +143,16 @@ app.get('/api/page-content/:pageName', async (req, res) => {
         data = data.replace(/{{LOGIN_LINK}}/g, LOGIN_LINK);
         data = data.replace(/{{TRAINING_REGISTER_LINK}}/g, TRAINING_REGISTER_LINK);
         data = data.replace(/{{TRAINING_COURSES_LINK}}/g, TRAINING_COURSES_LINK);
-        res.json(JSON.parse(data));
+
+        const jsonContent = JSON.parse(data);
+        if (Array.isArray(jsonContent.content)) {
+            jsonContent.content.push(`<div style="border: 5px solid red; padding: 20px; margin: 20px; background: #ffe6e6; color: red; font-weight: bold; z-index: 9999; position: relative;">
+                DEBUG MODE ACTIVE<br>
+                Current Dir: ${currentDir}<br>
+                Register Link: ${TRAINING_REGISTER_LINK}
+            </div>`);
+        }
+        res.json(jsonContent);
     } catch (error) {
         if (error.code === 'ENOENT') {
             res.json({ content: '' }); // No content yet
