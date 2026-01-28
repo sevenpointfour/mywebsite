@@ -140,10 +140,11 @@ app.get('/api/page-content/:pageName', async (req, res) => {
     try {
         let data = await fs.readFile(filePath, 'utf8');
         // Replace any placeholders with environment-specific values
-        data = data.replace(/{{REGISTER_LINK}}/g, REGISTER_LINK);
-        data = data.replace(/{{LOGIN_LINK}}/g, LOGIN_LINK);
-        data = data.replace(/{{TRAINING_REGISTER_LINK}}/g, TRAINING_REGISTER_LINK);
-        data = data.replace(/{{TRAINING_COURSES_LINK}}/g, TRAINING_COURSES_LINK);
+        res.set('Cache-Control', 'no-store');
+        data = data.replace(/\{\{\s*REGISTER_LINK\s*\}\}/g, REGISTER_LINK || '#');
+        data = data.replace(/\{\{\s*LOGIN_LINK\s*\}\}/g, LOGIN_LINK || '#');
+        data = data.replace(/\{\{\s*TRAINING_REGISTER_LINK\s*\}\}/g, TRAINING_REGISTER_LINK || '#');
+        data = data.replace(/\{\{\s*TRAINING_COURSES_LINK\s*\}\}/g, TRAINING_COURSES_LINK || '#');
         res.json(JSON.parse(data));
     } catch (error) {
         if (error.code === 'ENOENT') {
