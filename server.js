@@ -59,16 +59,24 @@ const otpStore = {};
 const currentDir = __dirname.toLowerCase();
 let REGISTER_LINK;
 let LOGIN_LINK;
+let TRAINING_REGISTER_LINK;
+let TRAINING_COURSES_LINK;
 
 if (currentDir.includes('staging_mywebsite')) {
     REGISTER_LINK = 'https://staging.myconsultation.sevenpointfour.in/register.html';
     LOGIN_LINK = 'https://staging.myconsultation.sevenpointfour.in/login.html';
+    TRAINING_REGISTER_LINK = 'https://staging.training.arogyanubhutifoundation.in/register';
+    TRAINING_COURSES_LINK = 'https://staging.training.arogyanubhutifoundation.in/courses';
 } else if (currentDir.includes('mywebsite')) {
     REGISTER_LINK = 'https://myconsultation.sevenpointfour.in/register.html';
     LOGIN_LINK = 'https://myconsultation.sevenpointfour.in/login.html';
+    TRAINING_REGISTER_LINK = 'https://training.arogyanubhutifoundation.in/register';
+    TRAINING_COURSES_LINK = 'https://training.arogyanubhutifoundation.in/courses';
 } else {
     REGISTER_LINK = 'http://localhost:3020/register.html';
     LOGIN_LINK = 'http://localhost:3020/login.html';
+    TRAINING_REGISTER_LINK = 'http://localhost:3000/register';
+    TRAINING_COURSES_LINK = 'http://localhost:3000/courses';
 }
  
 
@@ -132,6 +140,8 @@ app.get('/api/page-content/:pageName', async (req, res) => {
         // Replace any placeholders with environment-specific values
         data = data.replace(/{{REGISTER_LINK}}/g, REGISTER_LINK);
         data = data.replace(/{{LOGIN_LINK}}/g, LOGIN_LINK);
+        data = data.replace(/{{TRAINING_REGISTER_LINK}}/g, TRAINING_REGISTER_LINK);
+        data = data.replace(/{{TRAINING_COURSES_LINK}}/g, TRAINING_COURSES_LINK);
         res.json(JSON.parse(data));
     } catch (error) {
         if (error.code === 'ENOENT') {
