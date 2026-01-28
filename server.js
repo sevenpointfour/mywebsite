@@ -64,17 +64,17 @@ let TRAINING_REGISTER_LINK;
 let TRAINING_COURSES_LINK;
 
 if (currentDir.includes('staging_mywebsite')) {
-    REGISTER_LINK = 'https://staging.myconsultation.sevenpointfour.in/register.html';
+    REGISTER_LINK = 'https://staging.training.arogyanubhutifoundation.in/register';
     LOGIN_LINK = 'https://staging.myconsultation.sevenpointfour.in/login.html';
     TRAINING_REGISTER_LINK = 'https://staging.training.arogyanubhutifoundation.in/register';
     TRAINING_COURSES_LINK = 'https://staging.training.arogyanubhutifoundation.in/courses';
 } else if (currentDir.includes('mywebsite')) {
-    REGISTER_LINK = 'https://myconsultation.sevenpointfour.in/register.html';
+    REGISTER_LINK = 'https://training.arogyanubhutifoundation.in/register';
     LOGIN_LINK = 'https://myconsultation.sevenpointfour.in/login.html';
     TRAINING_REGISTER_LINK = 'https://training.arogyanubhutifoundation.in/register';
     TRAINING_COURSES_LINK = 'https://training.arogyanubhutifoundation.in/courses';
 } else {
-    REGISTER_LINK = 'http://localhost:3020/register.html';
+    REGISTER_LINK = 'http://localhost:3000/register';
     LOGIN_LINK = 'http://localhost:3020/login.html';
     TRAINING_REGISTER_LINK = 'http://localhost:3000/register';
     TRAINING_COURSES_LINK = 'http://localhost:3000/courses';
