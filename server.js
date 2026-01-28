@@ -63,7 +63,7 @@ let LOGIN_LINK;
 let TRAINING_REGISTER_LINK;
 let TRAINING_COURSES_LINK;
 
-if (currentDir.includes('staging_mywebsite')) {
+if (currentDir.includes('staging')) {
     REGISTER_LINK = 'https://staging.training.arogyanubhutifoundation.in/register';
     LOGIN_LINK = 'https://staging.myconsultation.sevenpointfour.in/login.html';
     TRAINING_REGISTER_LINK = 'https://staging.training.arogyanubhutifoundation.in/register';
