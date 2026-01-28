@@ -132,17 +132,39 @@ app.use((req, res, next) => {
 // GET page content
 app.get('/api/page-content/:pageName', async (req, res) => {
     const { pageName } = req.params;
-    console.log(`DEBUG: Serving ${pageName} with Training Link: ${TRAINING_REGISTER_LINK}`);
+    
+    // Dynamic link logic based on hostname
+    const host = req.get('host');
+    let dynamicRegisterLink, dynamicLoginLink, dynamicTrainingRegisterLink, dynamicTrainingCoursesLink;
+
+    if (host && host.includes('staging')) {
+        dynamicRegisterLink = 'https://staging.training.arogyanubhutifoundation.in/register';
+        dynamicLoginLink = 'https://staging.myconsultation.sevenpointfour.in/login.html';
+        dynamicTrainingRegisterLink = 'https://staging.training.arogyanubhutifoundation.in/register';
+        dynamicTrainingCoursesLink = 'https://staging.training.arogyanubhutifoundation.in/courses';
+    } else if (host && host.includes('localhost')) {
+        dynamicRegisterLink = 'http://localhost:3000/register';
+        dynamicLoginLink = 'http://localhost:3020/login.html';
+        dynamicTrainingRegisterLink = 'http://localhost:3000/register';
+        dynamicTrainingCoursesLink = 'http://localhost:3000/courses';
+    } else {
+        dynamicRegisterLink = 'https://training.arogyanubhutifoundation.in/register';
+        dynamicLoginLink = 'https://myconsultation.sevenpointfour.in/login.html';
+        dynamicTrainingRegisterLink = 'https://training.arogyanubhutifoundation.in/register';
+        dynamicTrainingCoursesLink = 'https://training.arogyanubhutifoundation.in/courses';
+    }
+
+    console.log(`DEBUG: Serving ${pageName} with Training Link: ${dynamicTrainingRegisterLink}`);
     const contentDir = path.join(__dirname, 'content');
     const filePath = path.join(contentDir, `${pageName}.json`);
 
     try {
         let data = await fs.readFile(filePath, 'utf8');
         // Replace any placeholders with environment-specific values
-        data = data.replace(/{{REGISTER_LINK}}/g, REGISTER_LINK);
-        data = data.replace(/{{LOGIN_LINK}}/g, LOGIN_LINK);
-        data = data.replace(/{{TRAINING_REGISTER_LINK}}/g, TRAINING_REGISTER_LINK);
-        data = data.replace(/{{TRAINING_COURSES_LINK}}/g, TRAINING_COURSES_LINK);
+        data = data.replace(/{{REGISTER_LINK}}/g, dynamicRegisterLink);
+        data = data.replace(/{{LOGIN_LINK}}/g, dynamicLoginLink);
+        data = data.replace(/{{TRAINING_REGISTER_LINK}}/g, dynamicTrainingRegisterLink);
+        data = data.replace(/{{TRAINING_COURSES_LINK}}/g, dynamicTrainingCoursesLink);
         res.json(JSON.parse(data));
     } catch (error) {
         if (error.code === 'ENOENT') {
