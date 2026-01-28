@@ -90,6 +90,26 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+// New route to handle index.html as a template
+app.get(['/', '/index.html'], async (req, res) => {
+    try {
+        const filePath = path.join(__dirname, 'public', 'index.html');
+        let data = await fs.readFile(filePath, 'utf8');
+
+        // Replace placeholders
+        data = data.replace(/\{\{\s*REGISTER_LINK\s*\}\}/g, REGISTER_LINK || '#');
+        data = data.replace(/\{\{\s*LOGIN_LINK\s*\}\}/g, LOGIN_LINK || '#');
+        data = data.replace(/\{\{\s*TRAINING_REGISTER_LINK\s*\}\}/g, TRAINING_REGISTER_LINK || '#');
+        data = data.replace(/\{\{\s*TRAINING_COURSES_LINK\s*\}\}/g, TRAINING_COURSES_LINK || '#');
+
+        res.set('Content-Type', 'text/html');
+        res.send(data);
+    } catch (error) {
+        console.error('Error processing index.html as template:', error);
+        res.status(500).send('Error loading page');
+    }
+});
+
 // Serve static files from "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
