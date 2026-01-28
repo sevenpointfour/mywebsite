@@ -10,7 +10,7 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3010;
 
-console.log(`SERVER STARTUP: NODE_ENV is set to: ${process.env.NODE_ENV || 'Not Set'}`);
+console.error(`SERVER STARTUP: NODE_ENV is set to: ${process.env.NODE_ENV || 'Not Set'}`);
 
 function getUploadPath(req) {
     let uploadPath = 'public/photos/';
