@@ -132,6 +132,7 @@ app.use((req, res, next) => {
 // GET page content
 app.get('/api/page-content/:pageName', async (req, res) => {
     const { pageName } = req.params;
+    console.log(`DEBUG: Serving ${pageName} with Training Link: ${TRAINING_REGISTER_LINK}`);
     const contentDir = path.join(__dirname, 'content');
     const filePath = path.join(contentDir, `${pageName}.json`);
 
