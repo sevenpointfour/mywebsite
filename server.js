@@ -422,6 +422,12 @@ app.get('/kill-server', (req, res) => {
     process.exit(1);
 });
 
+// Temporary diagnostic endpoint
+app.get('/api/debug/env', (req, res) => {
+    res.setHeader('Content-Type', 'text/plain');
+    res.send(`Current NODE_ENV: ${process.env.NODE_ENV || 'Not Set'}`);
+});
+
 // Fallback for client-side routing
 app.get('*', (req, res) => {
     if (path.extname(req.path).length > 0) {
