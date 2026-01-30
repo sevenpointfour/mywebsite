@@ -438,7 +438,7 @@ app.get('/api/admin/download-content', verifyAdmin, async (req, res) => {
 
 // Health check
 app.get('/ping', (req, res) => {
-    res.send('pong - RESTART VERIFICATION');
+    res.send('pong - VERSION CHECK: LINKS UPDATED');
 });
 
 app.get('/kill-server', (req, res) => {
