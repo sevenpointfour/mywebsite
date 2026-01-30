@@ -1,6 +1,6 @@
 ---
 deployment:
   tasks:
-    - /usr/bin/rsync -av --exclude=.git --exclude=node_modules . /home3/sevenpoi/nodeapps/staging_mywebsite
+    - /bin/tar --exclude=.git --exclude=node_modules -cf - . | /bin/tar -xf - -C /home3/sevenpoi/nodeapps/staging_mywebsite
     - /bin/mkdir -p /home3/sevenpoi/nodeapps/staging_mywebsite/tmp
     - /bin/touch /home3/sevenpoi/nodeapps/staging_mywebsite/tmp/restart.txt
