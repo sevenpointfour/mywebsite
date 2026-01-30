@@ -1,10 +1,8 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home3/sevenpoi/nodeapps/mywebsite
-    - export REPO_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
-    - if [[ "$REPO_BRANCH" == "staging" ]] || [[ $PWD == *"staging"* ]]; then export DEPLOYPATH=/home3/sevenpoi/nodeapps/staging_mywebsite; fi
-    - echo "Deploying branch $REPO_BRANCH from $PWD to $DEPLOYPATH" > public/deploy_log.txt
+    - export DEPLOYPATH=/home3/sevenpoi/nodeapps/staging_mywebsite
+    - echo "Forced deploy to $DEPLOYPATH" > public/deploy_log.txt
     - /bin/tar --exclude=.git --exclude=node_modules -cf - . | /bin/tar -xf - -C $DEPLOYPATH
     - /bin/mkdir -p $DEPLOYPATH/tmp
     - /bin/touch $DEPLOYPATH/tmp/restart.txt
