@@ -1,8 +1,6 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home3/sevenpoi/nodeapps/staging_mywebsite
-    - echo "Forced deploy to $DEPLOYPATH" > public/deploy_log.txt
-    - /bin/tar --exclude=.git --exclude=node_modules -cf - . | /bin/tar -xf - -C $DEPLOYPATH
-    - /bin/mkdir -p $DEPLOYPATH/tmp
-    - /bin/touch $DEPLOYPATH/tmp/restart.txt
+    - /bin/tar --exclude=.git --exclude=node_modules -cf - . | /bin/tar -xf - -C /home3/sevenpoi/nodeapps/staging_mywebsite
+    - /bin/mkdir -p /home3/sevenpoi/nodeapps/staging_mywebsite/tmp
+    - /bin/touch /home3/sevenpoi/nodeapps/staging_mywebsite/tmp/restart.txt
