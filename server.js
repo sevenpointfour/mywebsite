@@ -166,6 +166,7 @@ app.get('/api/page-content/:pageName', async (req, res) => {
         data = data.replace(/{{LOGIN_LINK}}/g, dynamicLoginLink);
         data = data.replace(/{{TRAINING_REGISTER_LINK}}/g, dynamicTrainingRegisterLink);
         data = data.replace(/{{TRAINING_COURSES_LINK}}/g, dynamicTrainingCoursesLink);
+        res.setHeader('Cache-Control', 'no-store');
         res.json(JSON.parse(data));
     } catch (error) {
         if (error.code === 'ENOENT') {
