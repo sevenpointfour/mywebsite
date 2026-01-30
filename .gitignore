@@ -4,3 +4,4 @@ dist
 tmp/
 stderr.log
 raw_client_data/
+public/deploy_log.txt
