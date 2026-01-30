@@ -1,5 +1,4 @@
 ---
 deployment:
   tasks:
-    - /bin/mkdir -p /home3/sevenpoi/nodeapps/staging_mywebsite/tmp
-    - /bin/touch /home3/sevenpoi/nodeapps/staging_mywebsite/tmp/restart.txt
+    - if echo "$PWD" | grep "staging_mywebsite" > /dev/null; then target="/home3/sevenpoi/nodeapps/staging_mywebsite"; else target="/home3/sevenpoi/nodeapps/mywebsite"; fi; /bin/mkdir -p $target/tmp && /bin/touch $target/tmp/restart.txt
