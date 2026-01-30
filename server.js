@@ -65,17 +65,17 @@ let TRAINING_REGISTER_LINK;
 let TRAINING_COURSES_LINK;
 
 if (process.env.NODE_ENV === 'staging') {
-    REGISTER_LINK = 'https://staging.training.arogyanubhutifoundation.in/register';
+    REGISTER_LINK = 'https://staging.myconsultation.sevenpointfour.in/register.html';
     LOGIN_LINK = 'https://staging.myconsultation.sevenpointfour.in/login.html';
     TRAINING_REGISTER_LINK = 'https://staging.training.arogyanubhutifoundation.in/register';
     TRAINING_COURSES_LINK = 'https://staging.training.arogyanubhutifoundation.in/courses';
 } else if (process.env.NODE_ENV === 'production') {
-    REGISTER_LINK = 'https://training.arogyanubhutifoundation.in/register';
+    REGISTER_LINK = 'https://myconsultation.sevenpointfour.in/register.html';
     LOGIN_LINK = 'https://myconsultation.sevenpointfour.in/login.html';
     TRAINING_REGISTER_LINK = 'https://training.arogyanubhutifoundation.in/register';
     TRAINING_COURSES_LINK = 'https://training.arogyanubhutifoundation.in/courses';
 } else {
-    REGISTER_LINK = 'http://localhost:3000/register';
+    REGISTER_LINK = 'http://localhost:3020/register.html';
     LOGIN_LINK = 'http://localhost:3020/login.html';
     TRAINING_REGISTER_LINK = 'http://localhost:3000/register';
     TRAINING_COURSES_LINK = 'http://localhost:3000/courses';
@@ -140,17 +140,17 @@ app.get('/api/page-content/:pageName', async (req, res) => {
     let dynamicRegisterLink, dynamicLoginLink, dynamicTrainingRegisterLink, dynamicTrainingCoursesLink;
 
     if (host && host.includes('staging')) {
-        dynamicRegisterLink = 'https://staging.training.arogyanubhutifoundation.in/register';
+        dynamicRegisterLink = 'https://staging.myconsultation.sevenpointfour.in/register.html';
         dynamicLoginLink = 'https://staging.myconsultation.sevenpointfour.in/login.html';
         dynamicTrainingRegisterLink = 'https://staging.training.arogyanubhutifoundation.in/register';
         dynamicTrainingCoursesLink = 'https://staging.training.arogyanubhutifoundation.in/courses';
     } else if (host && (host.includes('localhost') || host.includes('127.0.0.1'))) {
-        dynamicRegisterLink = 'http://localhost:3000/register';
+        dynamicRegisterLink = 'http://localhost:3020/register.html';
         dynamicLoginLink = 'http://localhost:3020/login.html';
         dynamicTrainingRegisterLink = 'http://localhost:3000/register';
         dynamicTrainingCoursesLink = 'http://localhost:3000/courses';
     } else {
-        dynamicRegisterLink = 'https://training.arogyanubhutifoundation.in/register';
+        dynamicRegisterLink = 'https://myconsultation.sevenpointfour.in/register.html';
         dynamicLoginLink = 'https://myconsultation.sevenpointfour.in/login.html';
         dynamicTrainingRegisterLink = 'https://training.arogyanubhutifoundation.in/register';
         dynamicTrainingCoursesLink = 'https://training.arogyanubhutifoundation.in/courses';
