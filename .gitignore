@@ -5,3 +5,4 @@ tmp/
 stderr.log
 raw_client_data/
 public/deploy_log.txt
+package-lock.json
